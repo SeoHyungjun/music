@@ -23,17 +23,16 @@ public class MainActivity extends AppCompatActivity {
     BitmapDrawable bitmap;
     TextView l1_music, l2_music, l3_music, l4_music;
     TextView l1_singer, l2_singer, l3_singer, l4_singer;
+
+
     LinearLayout list1, list2, list3, list4;
     LinearLayout wrap_list1, wrap_list2, wrap_list3, wrap_list4;
 
     ImageView delete1, delete2, delete3, delete4;
     ImageView favor1, favor2, favor3, favor4;
 
-    Animation translateLeftAnim, translateLeftAnim2;
-    Animation translateRightAnim, translateRightAnim2;
-    boolean isPageOpen = false;
 
-    float down_x, up_x, startdown_x, init_x, move_x;
+    float down_x, init_x, move_x;
     float screen_width;
     int anim_num = 0;
 
@@ -73,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
         list4 = findViewById(R.id.list4);
 
         wrap_list1 = findViewById(R.id.wrap_list1);
+        wrap_list2 = findViewById(R.id.wrap_list2);
+        wrap_list3 = findViewById(R.id.wrap_list3);
+        wrap_list4 = findViewById(R.id.wrap_list4);
+
 
 
         delete1 = findViewById(R.id.delete1);// 슬라이딩으로 보여질 레이아웃 객체 참조
@@ -86,20 +89,12 @@ public class MainActivity extends AppCompatActivity {
         favor4 = findViewById(R.id.favor4);
 
 
-        translateLeftAnim = AnimationUtils.loadAnimation(this, R.anim.translate_left);
-        translateLeftAnim2 = AnimationUtils.loadAnimation(this, R.anim.translate_left_music);
-        translateRightAnim = AnimationUtils.loadAnimation(this, R.anim.translate_right);
-        translateRightAnim2 = AnimationUtils.loadAnimation(this, R.anim.translate_right_music);
-        SlidingPageAnimationListener animListener = new SlidingPageAnimationListener();
-        translateLeftAnim.setAnimationListener(animListener);
-        translateRightAnim.setAnimationListener(animListener);
-
 
         Resources res = getResources();
 
         bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
         img1.setImageDrawable(bitmap);
-        l1_music.setText("What is Love?11111111111111111111111");
+        l1_music.setText("What is Love?11111111");
         l1_singer.setText("TWICE (트와이스)");
 
         bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
@@ -121,47 +116,66 @@ public class MainActivity extends AppCompatActivity {
         wrap_list1.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                //detector.onTouchEvent(motionEvent);
-
                 int action = motionEvent.getAction();
-
-
                 if (action == MotionEvent.ACTION_DOWN) {
-
-                    /*if(anim_num == 0) {
-                        anim_num = 1;
-                        startdown_x = motionEvent.getX();
-                    }*/
                     down_x = motionEvent.getX();
                     init_x = down_x;
-                    //println(down_x.toString());
-
-                    //list1.setTranslationX(0- (startdown_x - down_x));
-                    //list1.startAnimation(translateLeftAnim2);
-                    //delete1.setVisibility(View.VISIBLE);
-                    //delete1.startAnimation(translateLeftAnim);
-                    //delete1.setTranslationX(down_x);
-                    //startdown_x = 1000 - (startdown_x - down_x);
                 }
 
                 if (action == MotionEvent.ACTION_MOVE) {
                     move_x = motionEvent.getX();
 
 
+                    //터치 후 왼쪽으로 드래그
                     if(move_x < down_x) {
-                        //list1.startAnimation(translateLeftAnim2);
                         delete1.setVisibility(View.VISIBLE);
-                        //delete1.startAnimation(translateLeftAnim);
+                        favor1.setVisibility(View.GONE);
+
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
                         if (screen_width - ((down_x - move_x) * 5) >= 0 && screen_width - ((down_x - move_x) * 5) <= screen_width) {
                             delete1.setTranslationX(screen_width - ((down_x - move_x) * 5));
                             list1.setTranslationX(-((down_x - move_x) * 5));
-                        } else if (screen_width - ((down_x - move_x) * 5) < 0) {
+                        }
+
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if (screen_width - ((down_x - move_x) * 5) < 0) {
                             delete1.setTranslationX(0);
-                            //delete1.setVisibility(View.GONE);
                             list1.setTranslationX(-screen_width);
-                        } else {
+                        }
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
                             delete1.setTranslationX(0);
                             delete1.setVisibility(View.GONE);
+                            list1.setTranslationX(0);
+                        }
+                        init_x = move_x;
+
+                    }
+
+                    //터치 후 오른쪽으로 드래그
+                    else if (move_x > down_x) {
+                        favor1.setVisibility(View.VISIBLE);
+                        delete1.setVisibility(View.GONE);
+
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
+                        if ( (down_x - move_x) * -5 >= 0 && (down_x - move_x) * -5 <= screen_width) {
+                            favor1.setTranslationX(-screen_width + (down_x - move_x) * -5);
+                            list1.setTranslationX((down_x - move_x) * -5);
+                        }
+
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if ( (down_x - move_x) * -5 < 0 ) {
+                            favor1.setVisibility(View.GONE);
+                            favor1.setTranslationX(0);
+                            list1.setTranslationX(0);
+                        }
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
+                            favor1.setTranslationX(0);
                             list1.setTranslationX(0);
                         }
                         init_x = move_x;
@@ -171,156 +185,509 @@ public class MainActivity extends AppCompatActivity {
 
                 if (action == MotionEvent.ACTION_UP) {
                     anim_num = 0;
-                    //list1.setTranslationX((float)0);
-                    //delete1.setTranslationX((float)1000);
-                    if (delete1.getX() < screen_width / 2.0) {
-                        //삭제
-                        TranslateAnimation anim = new TranslateAnimation(delete1.getX(), 0, 0, 0);
-                        anim.setDuration((int) delete1.getX());
-                        TranslateAnimation anim2 = new TranslateAnimation(list1.getX(), -screen_width, 0, 0);
-                        anim2.setDuration((int) delete1.getX());
 
-                        delete1.startAnimation(anim);
-                        list1.startAnimation(anim2);
+                    if( list1.getX() > 0 && favor1.getX() > -screen_width ) {
+                        //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
+                        if ( favor1.getX() >= -1 * screen_width / 2.0 ) {
+                            //println("if");
+                            TranslateAnimation anim = new TranslateAnimation(favor1.getX(), 0, 0, 0);
+                            anim.setDuration((int)favor1.getX() * -1 );
+                            TranslateAnimation anim2 = new TranslateAnimation(list1.getX(), screen_width, 0, 0);
+                            anim2.setDuration((int)favor1.getX() * -1 );
 
-                        list1.setTranslationX(0);
-                        delete1.setTranslationX((float) 0.0);
+                            favor1.startAnimation(anim);
+                            list1.startAnimation(anim2);
 
-                    } else {
-                        TranslateAnimation anim = new TranslateAnimation(delete1.getX(), screen_width, 0, 0);
-                        anim.setDuration((int) (screen_width - delete1.getX()));
-                        TranslateAnimation anim2 = new TranslateAnimation(list1.getX(), 0, 0, 0);
-                        anim2.setDuration((int) (screen_width - delete1.getX()));
+                            list1.setTranslationX(0);
+                            favor1.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 favor 화면의 반 미만일 때 다시 왼쪽으로 돌아감
+                        else if ( favor1.getX() > -1 * screen_width && favor1.getX() < -1 * screen_width / 2.0 ){
+                            TranslateAnimation anim = new TranslateAnimation(favor1.getX(), -screen_width, 0, 0);
+                            anim.setDuration((int)list1.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list1.getX(), 0, 0, 0);
+                            anim2.setDuration((int)list1.getX());
 
 
-                        delete1.startAnimation(anim);
-                        list1.startAnimation(anim2);
+                            favor1.startAnimation(anim);
+                            list1.startAnimation(anim2);
 
-                        list1.setTranslationX(0);
-                        delete1.setTranslationX(0);
+                            list1.setTranslationX(0);
+                            favor1.setTranslationX(0);
 
-                        delete1.setVisibility(View.GONE);
+                            favor1.setVisibility(View.GONE);
+                        }
+                    }
+                    else if( list1.getX() < 0 && delete1.getX() < screen_width ) {
+                        if ( delete1.getX() <= screen_width / 2.0) {
+                            TranslateAnimation anim = new TranslateAnimation(delete1.getX(), 0, 0, 0);
+                            anim.setDuration((int) delete1.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list1.getX(), -screen_width, 0, 0);
+                            anim2.setDuration((int) delete1.getX());
+
+                            delete1.startAnimation(anim);
+                            list1.startAnimation(anim2);
+
+                            list1.setTranslationX(0);
+                            delete1.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 delete가 화면의 반 미만일 때 다시 오른쪽으로 돌아감
+                        else if( delete1.getX() > screen_width / 2.0 && delete1.getX() < screen_width ){
+                            TranslateAnimation anim = new TranslateAnimation(delete1.getX(), screen_width, 0, 0);
+                            anim.setDuration((int) (screen_width - delete1.getX()));
+                            TranslateAnimation anim2 = new TranslateAnimation(list1.getX(), 0, 0, 0);
+                            anim2.setDuration((int) (screen_width - delete1.getX()));
+
+
+                            delete1.startAnimation(anim);
+                            list1.startAnimation(anim2);
+
+                            list1.setTranslationX(0);
+                            delete1.setTranslationX(0);
+
+                            delete1.setVisibility(View.GONE);
+                        }
                     }
                 }
                 return true;
             }
         });
 
-        list2.setOnTouchListener(new LinearLayout.OnTouchListener() {
+        wrap_list2.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                //detector.onTouchEvent(motionEvent);
-
                 int action = motionEvent.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    down_x = motionEvent.getX();
+                    init_x = down_x;
+                }
+
+                if (action == MotionEvent.ACTION_MOVE) {
+                    move_x = motionEvent.getX();
 
 
-                if (anim_num == 0) {
-                    if (action == MotionEvent.ACTION_DOWN) {
-                        down_x = motionEvent.getX();
-                        up_x = (float) 0.0;
-                    }
+                    //터치 후 왼쪽으로 드래그
+                    if(move_x < down_x) {
+                        delete2.setVisibility(View.VISIBLE);
+                        favor2.setVisibility(View.GONE);
 
-                    if (action == MotionEvent.ACTION_UP) {
-                        up_x = motionEvent.getX();
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
+                        if (screen_width - ((down_x - move_x) * 5) >= 0 && screen_width - ((down_x - move_x) * 5) <= screen_width) {
+                            delete2.setTranslationX(screen_width - ((down_x - move_x) * 5));
+                            list2.setTranslationX(-((down_x - move_x) * 5));
+                        }
 
-                        //오른쪽으로 드래그 시
-                        if (up_x > down_x + 200) {
-                            println("right");
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if (screen_width - ((down_x - move_x) * 5) < 0) {
+                            delete2.setTranslationX(0);
+                            list2.setTranslationX(-screen_width);
+                        }
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
+                            delete2.setTranslationX(0);
                             delete2.setVisibility(View.GONE);
-                            list2.startAnimation(translateRightAnim2);
-                            favor2.setVisibility(View.VISIBLE);
-                            favor2.startAnimation(translateRightAnim);
-                        } else if (up_x < down_x - 200) {
-                            println("left");
+                            list2.setTranslationX(0);
+                        }
+                        init_x = move_x;
+
+                    }
+
+                    //터치 후 오른쪽으로 드래그
+                    else if (move_x > down_x) {
+                        favor2.setVisibility(View.VISIBLE);
+                        delete2.setVisibility(View.GONE);
+
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
+                        if ( (down_x - move_x) * -5 >= 0 && (down_x - move_x) * -5 <= screen_width) {
+                            favor2.setTranslationX(-screen_width + (down_x - move_x) * -5);
+                            list2.setTranslationX((down_x - move_x) * -5);
+                        }
+
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if ( (down_x - move_x) * -5 < 0 ) {
                             favor2.setVisibility(View.GONE);
-                            list2.startAnimation(translateLeftAnim2);
-                            delete2.setVisibility(View.VISIBLE);
-                            delete2.startAnimation(translateLeftAnim);
+                            favor2.setTranslationX(0);
+                            list2.setTranslationX(0);
                         }
-                        down_x = (float) 0.0;
-                        up_x = (float) 0.0;
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
+                            favor2.setTranslationX(0);
+                            list2.setTranslationX(0);
+                        }
+                        init_x = move_x;
+
+                    }
+                }
+
+                if (action == MotionEvent.ACTION_UP) {
+                    anim_num = 0;
+
+                    if( list2.getX() > 0 && favor2.getX() > -screen_width ) {
+                        //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
+                        if ( favor2.getX() >= -1 * screen_width / 2.0 ) {
+                            //println("if");
+                            TranslateAnimation anim = new TranslateAnimation(favor2.getX(), 0, 0, 0);
+                            anim.setDuration((int)favor2.getX() * -1 );
+                            TranslateAnimation anim2 = new TranslateAnimation(list2.getX(), screen_width, 0, 0);
+                            anim2.setDuration((int)favor2.getX() * -1 );
+
+                            favor2.startAnimation(anim);
+                            list2.startAnimation(anim2);
+
+                            list2.setTranslationX(0);
+                            favor2.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 favor 화면의 반 미만일 때 다시 왼쪽으로 돌아감
+                        else if ( favor2.getX() > -1 * screen_width && favor2.getX() < -1 * screen_width / 2.0 ){
+                            TranslateAnimation anim = new TranslateAnimation(favor2.getX(), -screen_width, 0, 0);
+                            anim.setDuration((int)list2.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list2.getX(), 0, 0, 0);
+                            anim2.setDuration((int)list2.getX());
+
+
+                            favor2.startAnimation(anim);
+                            list2.startAnimation(anim2);
+
+                            list2.setTranslationX(0);
+                            favor2.setTranslationX(0);
+
+                            favor2.setVisibility(View.GONE);
+                        }
+                    }
+                    else if( list2.getX() < 0 && delete2.getX() < screen_width ) {
+                        if ( delete2.getX() <= screen_width / 2.0) {
+                            TranslateAnimation anim = new TranslateAnimation(delete2.getX(), 0, 0, 0);
+                            anim.setDuration((int) delete2.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list2.getX(), -screen_width, 0, 0);
+                            anim2.setDuration((int) delete2.getX());
+
+                            delete2.startAnimation(anim);
+                            list2.startAnimation(anim2);
+
+                            list2.setTranslationX(0);
+                            delete2.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 delete가 화면의 반 미만일 때 다시 오른쪽으로 돌아감
+                        else if( delete2.getX() > screen_width / 2.0 && delete2.getX() < screen_width ){
+                            TranslateAnimation anim = new TranslateAnimation(delete2.getX(), screen_width, 0, 0);
+                            anim.setDuration((int) (screen_width - delete2.getX()));
+                            TranslateAnimation anim2 = new TranslateAnimation(list2.getX(), 0, 0, 0);
+                            anim2.setDuration((int) (screen_width - delete2.getX()));
+
+
+                            delete2.startAnimation(anim);
+                            list2.startAnimation(anim2);
+
+                            list2.setTranslationX(0);
+                            delete2.setTranslationX(0);
+
+                            delete2.setVisibility(View.GONE);
+                        }
                     }
                 }
                 return true;
             }
         });
 
-        list3.setOnTouchListener(new LinearLayout.OnTouchListener() {
+        wrap_list3.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                //detector.onTouchEvent(motionEvent);
-
                 int action = motionEvent.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    down_x = motionEvent.getX();
+                    init_x = down_x;
+                }
 
-                if (anim_num == 0) {
-                    if (action == MotionEvent.ACTION_DOWN) {
-                        down_x = motionEvent.getX();
-                        up_x = (float) 0.0;
-                    }
+                if (action == MotionEvent.ACTION_MOVE) {
+                    move_x = motionEvent.getX();
 
-                    if (action == MotionEvent.ACTION_UP) {
-                        up_x = motionEvent.getX();
 
-                        //오른쪽으로 드래그 시
-                        if (up_x > down_x + 200) {
-                            println("right");
+                    //터치 후 왼쪽으로 드래그
+                    if(move_x < down_x) {
+                        delete3.setVisibility(View.VISIBLE);
+                        favor3.setVisibility(View.GONE);
+
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
+                        if (screen_width - ((down_x - move_x) * 5) >= 0 && screen_width - ((down_x - move_x) * 5) <= screen_width) {
+                            delete3.setTranslationX(screen_width - ((down_x - move_x) * 5));
+                            list3.setTranslationX(-((down_x - move_x) * 5));
+                        }
+
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if (screen_width - ((down_x - move_x) * 5) < 0) {
+                            delete3.setTranslationX(0);
+                            list3.setTranslationX(-screen_width);
+                        }
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
+                            delete3.setTranslationX(0);
                             delete3.setVisibility(View.GONE);
-                            list3.startAnimation(translateRightAnim2);
-                            favor3.setVisibility(View.VISIBLE);
-                            favor3.startAnimation(translateRightAnim);
-                        } else if (up_x < down_x - 200) {
-                            println("left");
-                            favor3.setVisibility(View.GONE);
-                            list3.startAnimation(translateLeftAnim2);
-                            delete3.setVisibility(View.VISIBLE);
-                            delete3.startAnimation(translateLeftAnim);
+                            list3.setTranslationX(0);
                         }
-                        down_x = (float) 0.0;
-                        up_x = (float) 0.0;
+                        init_x = move_x;
+
+                    }
+
+                    //터치 후 오른쪽으로 드래그
+                    else if (move_x > down_x) {
+                        favor3.setVisibility(View.VISIBLE);
+                        delete3.setVisibility(View.GONE);
+
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
+                        if ( (down_x - move_x) * -5 >= 0 && (down_x - move_x) * -5 <= screen_width) {
+                            favor3.setTranslationX(-screen_width + (down_x - move_x) * -5);
+                            list3.setTranslationX((down_x - move_x) * -5);
+                        }
+
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if ( (down_x - move_x) * -5 < 0 ) {
+                            favor3.setVisibility(View.GONE);
+                            favor3.setTranslationX(0);
+                            list3.setTranslationX(0);
+                        }
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
+                            favor3.setTranslationX(0);
+                            list3.setTranslationX(0);
+                        }
+                        init_x = move_x;
+
                     }
                 }
 
+                if (action == MotionEvent.ACTION_UP) {
+                    anim_num = 0;
+
+                    if( list3.getX() > 0 && favor3.getX() > -screen_width ) {
+                        //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
+                        if ( favor3.getX() >= -1 * screen_width / 2.0 ) {
+                            TranslateAnimation anim = new TranslateAnimation(favor3.getX(), 0, 0, 0);
+                            anim.setDuration((int)favor3.getX() * -1 );
+                            TranslateAnimation anim2 = new TranslateAnimation(list3.getX(), screen_width, 0, 0);
+                            anim2.setDuration((int)favor3.getX() * -1 );
+
+                            favor3.startAnimation(anim);
+                            list3.startAnimation(anim2);
+
+                            list3.setTranslationX(0);
+                            favor3.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 favor 화면의 반 미만일 때 다시 왼쪽으로 돌아감
+                        else if ( favor3.getX() > -1 * screen_width && favor3.getX() < -1 * screen_width / 2.0 ){
+                            TranslateAnimation anim = new TranslateAnimation(favor3.getX(), -screen_width, 0, 0);
+                            anim.setDuration((int)list3.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list3.getX(), 0, 0, 0);
+                            anim2.setDuration((int)list3.getX());
+
+
+                            favor3.startAnimation(anim);
+                            list3.startAnimation(anim2);
+
+                            list3.setTranslationX(0);
+                            favor3.setTranslationX(0);
+
+                            favor3.setVisibility(View.GONE);
+                        }
+                    }
+                    else if( list3.getX() < 0 && delete3.getX() < screen_width ) {
+                        if ( delete3.getX() <= screen_width / 2.0) {
+                            TranslateAnimation anim = new TranslateAnimation(delete3.getX(), 0, 0, 0);
+                            anim.setDuration((int) delete3.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list3.getX(), -screen_width, 0, 0);
+                            anim2.setDuration((int) delete3.getX());
+
+                            delete3.startAnimation(anim);
+                            list3.startAnimation(anim2);
+
+                            list3.setTranslationX(0);
+                            delete3.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 delete가 화면의 반 미만일 때 다시 오른쪽으로 돌아감
+                        else if( delete3.getX() > screen_width / 2.0 && delete3.getX() < screen_width ){
+                            TranslateAnimation anim = new TranslateAnimation(delete3.getX(), screen_width, 0, 0);
+                            anim.setDuration((int) (screen_width - delete3.getX()));
+                            TranslateAnimation anim2 = new TranslateAnimation(list3.getX(), 0, 0, 0);
+                            anim2.setDuration((int) (screen_width - delete3.getX()));
+
+
+                            delete3.startAnimation(anim);
+                            list3.startAnimation(anim2);
+
+                            list3.setTranslationX(0);
+                            delete3.setTranslationX(0);
+
+                            delete3.setVisibility(View.GONE);
+                        }
+                    }
+                }
                 return true;
             }
         });
 
-        list4.setOnTouchListener(new LinearLayout.OnTouchListener() {
+        wrap_list4.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                //detector.onTouchEvent(motionEvent);
-
                 int action = motionEvent.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    down_x = motionEvent.getX();
+                    init_x = down_x;
+                }
 
-                if (anim_num == 0) {
-                    if (action == MotionEvent.ACTION_DOWN) {
-                        down_x = motionEvent.getX();
-                        up_x = (float) 0.0;
+                if (action == MotionEvent.ACTION_MOVE) {
+                    move_x = motionEvent.getX();
+
+
+                    //터치 후 왼쪽으로 드래그
+                    if(move_x < down_x) {
+                        delete4.setVisibility(View.VISIBLE);
+                        favor4.setVisibility(View.GONE);
+
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
+                        if (screen_width - ((down_x - move_x) * 5) >= 0 && screen_width - ((down_x - move_x) * 5) <= screen_width) {
+                            delete4.setTranslationX(screen_width - ((down_x - move_x) * 5));
+                            list4.setTranslationX(-((down_x - move_x) * 5));
+                        }
+
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if (screen_width - ((down_x - move_x) * 5) < 0) {
+                            delete4.setTranslationX(0);
+                            list4.setTranslationX(-screen_width);
+                        }
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
+                            delete4.setTranslationX(0);
+                            delete4.setVisibility(View.GONE);
+                            list4.setTranslationX(0);
+                        }
+                        init_x = move_x;
+
                     }
 
-                    if (action == MotionEvent.ACTION_UP) {
-                        up_x = motionEvent.getX();
+                    //터치 후 오른쪽으로 드래그
+                    else if (move_x > down_x) {
+                        favor4.setVisibility(View.VISIBLE);
+                        delete4.setVisibility(View.GONE);
 
-                        //오른쪽으로 드래그 시
-                        if (up_x > down_x + 200) {
-                            println("right");
-                            delete4.setVisibility(View.GONE);
-                            list4.startAnimation(translateRightAnim2);
-                            favor4.setVisibility(View.VISIBLE);
-                            favor4.startAnimation(translateRightAnim);
-                        } else if (up_x < down_x - 200) {
-                            println("left " + up_x + " " + down_x);
-                            favor4.setVisibility(View.GONE);
-                            list4.startAnimation(translateLeftAnim2);
-                            delete4.setVisibility(View.VISIBLE);
-                            delete4.startAnimation(translateLeftAnim);
+                        //터치 후 움직인 거리 * 5 가 0 ~ 화면의 width 사이일 때
+                        //즉 터치에 의해 움직임
+                        if ( (down_x - move_x) * -5 >= 0 && (down_x - move_x) * -5 <= screen_width) {
+                            favor4.setTranslationX(-screen_width + (down_x - move_x) * -5);
+                            list4.setTranslationX((down_x - move_x) * -5);
                         }
-                        down_x = (float) 0.0;
-                        up_x = (float) 0.0;
+
+                        //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
+                        else if ( (down_x - move_x) * -5 < 0 ) {
+                            favor4.setVisibility(View.GONE);
+                            favor4.setTranslationX(0);
+                            list4.setTranslationX(0);
+                        }
+
+                        //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
+                        else {
+                            favor4.setTranslationX(0);
+                            list4.setTranslationX(0);
+                        }
+                        init_x = move_x;
+
+                    }
+                }
+
+                if (action == MotionEvent.ACTION_UP) {
+                    anim_num = 0;
+
+                    if( list4.getX() > 0 && favor4.getX() > -screen_width ) {
+                        //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
+                        if ( favor4.getX() >= -1 * screen_width / 2.0 ) {
+                            TranslateAnimation anim = new TranslateAnimation(favor4.getX(), 0, 0, 0);
+                            anim.setDuration((int)favor4.getX() * -1 );
+                            TranslateAnimation anim2 = new TranslateAnimation(list4.getX(), screen_width, 0, 0);
+                            anim2.setDuration((int)favor4.getX() * -1 );
+
+                            favor4.startAnimation(anim);
+                            list4.startAnimation(anim2);
+
+                            list4.setTranslationX(0);
+                            favor4.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 favor 화면의 반 미만일 때 다시 왼쪽으로 돌아감
+                        else if ( favor4.getX() > -1 * screen_width && favor4.getX() < -1 * screen_width / 2.0 ){
+                            TranslateAnimation anim = new TranslateAnimation(favor4.getX(), -screen_width, 0, 0);
+                            anim.setDuration((int)list4.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list4.getX(), 0, 0, 0);
+                            anim2.setDuration((int)list4.getX());
+
+
+                            favor4.startAnimation(anim);
+                            list4.startAnimation(anim2);
+
+                            list4.setTranslationX(0);
+                            favor4.setTranslationX(0);
+
+                            favor4.setVisibility(View.GONE);
+                        }
+                    }
+                    else if( list4.getX() < 0 && delete4.getX() < screen_width ) {
+                        if ( delete4.getX() <= screen_width / 2.0) {
+                            TranslateAnimation anim = new TranslateAnimation(delete4.getX(), 0, 0, 0);
+                            anim.setDuration((int) delete4.getX());
+                            TranslateAnimation anim2 = new TranslateAnimation(list4.getX(), -screen_width, 0, 0);
+                            anim2.setDuration((int) delete4.getX());
+
+                            delete4.startAnimation(anim);
+                            list4.startAnimation(anim2);
+
+                            list4.setTranslationX(0);
+                            delete4.setTranslationX((float) 0.0);
+
+                        }
+
+                        //드래그 후 땔때 delete가 화면의 반 미만일 때 다시 오른쪽으로 돌아감
+                        else if( delete4.getX() > screen_width / 2.0 && delete4.getX() < screen_width ){
+                            TranslateAnimation anim = new TranslateAnimation(delete4.getX(), screen_width, 0, 0);
+                            anim.setDuration((int) (screen_width - delete4.getX()));
+                            TranslateAnimation anim2 = new TranslateAnimation(list4.getX(), 0, 0, 0);
+                            anim2.setDuration((int) (screen_width - delete4.getX()));
+
+
+                            delete4.startAnimation(anim);
+                            list4.startAnimation(anim2);
+
+                            list4.setTranslationX(0);
+                            delete4.setTranslationX(0);
+
+                            delete4.setVisibility(View.GONE);
+                        }
                     }
                 }
                 return true;
             }
         });
+
+
 
     }
 
@@ -343,20 +710,4 @@ public class MainActivity extends AppCompatActivity {
     public void println(String data) {
         Toast.makeText(this, data, Toast.LENGTH_LONG).show();
     }
-
-
-    //버튼 클릭 (삭제예정)
-    public void onButton1Clicked(View v) {
-        if (isPageOpen) {
-            // 애니메이션 적용
-            list1.startAnimation(translateRightAnim2);
-            delete1.startAnimation(translateRightAnim);
-        } else {
-            list1.startAnimation(translateLeftAnim2);
-            delete1.setVisibility(View.VISIBLE);
-            delete1.startAnimation(translateLeftAnim);
-        }
-    }
-
-
 }

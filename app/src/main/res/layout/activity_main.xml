@@ -152,66 +152,73 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.25">
 
+
                 <LinearLayout
-                    android:id="@+id/list2"
+                    android:id="@+id/wrap_list2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/list_border"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:weightSum="1">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/list2"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight=".15"
-                        android:padding="2dp">
+                        android:background="@drawable/list_border"
+                        android:orientation="horizontal"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:weightSum="1">
 
-                        <ImageView
-                            android:id="@+id/img2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:adjustViewBounds="true"
-                            android:background="@drawable/cover"
-                            android:src="@drawable/i3" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".15"
+                            android:padding="2dp">
+
+                            <ImageView
+                                android:id="@+id/img2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/cover"
+                                android:src="@drawable/i3" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingLeft="12dp">
+
+                            <TextView
+                                android:id="@+id/list2_music"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#444444"
+                                android:textSize="17dp" />
+
+                            <TextView
+                                android:id="@+id/list2_singer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="1dp"
+                                android:textColor="#555555"
+                                android:textSize="12dp" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".15">
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.7"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingLeft="12dp">
-
-                        <TextView
-                            android:id="@+id/list2_music"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#444444"
-                            android:textSize="17dp" />
-
-                        <TextView
-                            android:id="@+id/list2_singer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="1dp"
-                            android:textColor="#555555"
-                            android:textSize="12dp" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".15">
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
                 <ImageView
@@ -239,65 +246,72 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.25">
 
+
                 <LinearLayout
-                    android:id="@+id/list3"
+                    android:id="@+id/wrap_list3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/list_border"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:weightSum="1">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/list3"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight=".15"
-                        android:padding="2dp">
+                        android:background="@drawable/list_border"
+                        android:orientation="horizontal"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:weightSum="1">
 
-                        <ImageView
-                            android:id="@+id/img3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:adjustViewBounds="true"
-                            android:background="@drawable/cover" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".15"
+                            android:padding="2dp">
+
+                            <ImageView
+                                android:id="@+id/img3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/cover" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingLeft="12dp">
+
+                            <TextView
+                                android:id="@+id/list3_music"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#444444"
+                                android:textSize="17dp" />
+
+                            <TextView
+                                android:id="@+id/list3_singer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="1dp"
+                                android:textColor="#555555"
+                                android:textSize="12dp" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".15">
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.7"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingLeft="12dp">
-
-                        <TextView
-                            android:id="@+id/list3_music"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#444444"
-                            android:textSize="17dp" />
-
-                        <TextView
-                            android:id="@+id/list3_singer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="1dp"
-                            android:textColor="#555555"
-                            android:textSize="12dp" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".15">
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
                 <ImageView
@@ -326,65 +340,72 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.25">
 
+
                 <LinearLayout
-                    android:id="@+id/list4"
+                    android:id="@+id/wrap_list4"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/list_border"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:weightSum="1">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/list4"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight=".15"
-                        android:padding="2dp">
+                        android:background="@drawable/list_border"
+                        android:orientation="horizontal"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:weightSum="1">
 
-                        <ImageView
-                            android:id="@+id/img4"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:adjustViewBounds="true"
-                            android:background="@drawable/cover" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".15"
+                            android:padding="2dp">
+
+                            <ImageView
+                                android:id="@+id/img4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/cover" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingLeft="12dp">
+
+                            <TextView
+                                android:id="@+id/list4_music"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#444444"
+                                android:textSize="17dp" />
+
+                            <TextView
+                                android:id="@+id/list4_singer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="1dp"
+                                android:textColor="#555555"
+                                android:textSize="12dp" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".15">
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.7"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingLeft="12dp">
-
-                        <TextView
-                            android:id="@+id/list4_music"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#444444"
-                            android:textSize="17dp" />
-
-                        <TextView
-                            android:id="@+id/list4_singer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="1dp"
-                            android:textColor="#555555"
-                            android:textSize="12dp" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".15">
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
                 <ImageView
@@ -420,11 +441,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onButton1Clicked" />
 
 </android.support.constraint.ConstraintLayout>
