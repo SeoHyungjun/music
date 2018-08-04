@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView favor1, favor2, favor3, favor4;
 
     int favor1_lock = 0;
-
+    int l1_index=0;
+    int l2_index=1;
+    int l3_index=2;
+    int l4_index=3;
 
     //리스트 드래그 시 움직인 거리 * move_multi 만큼 이동하도록
     float move_multi = (float)2.0;
@@ -42,11 +45,19 @@ public class MainActivity extends AppCompatActivity {
     float screen_width;
     int anim_num = 0;
 
+    //SingleTon patton activity 저장
+    private DataManager dataManager= DataManager.getInstance();
+
+
+
+
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dataManager.setActivity(this);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -96,28 +107,51 @@ public class MainActivity extends AppCompatActivity {
         favor4 = findViewById(R.id.favor4);
 
 
-
         Resources res = getResources();
 
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-        img1.setImageDrawable(bitmap);
-        l1_music.setText("What is Love?11111111");
-        l1_singer.setText("TWICE (트와이스)");
+        new ServerConn().execute();// list 받아오기
 
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
-        img2.setImageDrawable(bitmap);
-        l2_music.setText("데리러 가 (Good Evening)");
-        l2_singer.setText("SHINee (샤이니)");
-
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
-        img3.setImageDrawable(bitmap);
-        l3_music.setText("여행");
-        l3_singer.setText("볼빨간사춘기");
-
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
-        img4.setImageDrawable(bitmap);
-        l4_music.setText("사랑을 했다 (LOVE SCENARIO)");
-        l4_singer.setText("iKON");
+//
+//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+//        img1.setImageDrawable(bitmap);
+//        l1_music.setText(dataManager.music_data.get(0).title);
+//        l1_singer.setText(dataManager.music_data.get(0).singer);
+//
+//
+//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
+//        img2.setImageDrawable(bitmap);
+//        l2_music.setText(dataManager.music_data.get(1).title);
+//        l2_singer.setText(dataManager.music_data.get(1).singer);
+//
+//
+//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
+//        img3.setImageDrawable(bitmap);
+//        l3_music.setText(dataManager.music_data.get(2).title);
+//        l3_singer.setText(dataManager.music_data.get(2).singer);
+//
+//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
+//        img4.setImageDrawable(bitmap);
+//        l4_music.setText(dataManager.music_data.get(3).title);
+//        l4_singer.setText(dataManager.music_data.get(3).singer);
+//bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+//        img1.setImageDrawable(bitmap);
+//        l1_music.setText("What is Love?11111111");
+//        l1_singer.setText("TWICE (트와이스)");
+//
+//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
+//        img2.setImageDrawable(bitmap);
+//        l2_music.setText("데리러 가 (Good Evening)");
+//        l2_singer.setText("SHINee (샤이니)");
+//
+//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
+//        img3.setImageDrawable(bitmap);
+//        l3_music.setText("여행");
+//        l3_singer.setText("볼빨간사춘기");
+//
+//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
+//        img4.setImageDrawable(bitmap);
+//        l4_music.setText("사랑을 했다 (LOVE SCENARIO)");
+//        l4_singer.setText("iKON");
 
 
         wrap_list1.setOnTouchListener(new LinearLayout.OnTouchListener() {
@@ -230,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                             favor1.setTranslationX((float) 0.0);
 
 
-                            change_list_text(1, "aa","aa","aa");
+                            change_list_text(1);
                             favor1.setVisibility(View.GONE);
                         }
 
@@ -264,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                             list1.setTranslationX(0);
                             delete1.setTranslationX((float) 0.0);
 
-                            change_list_text(1, "aa","aa","aa");
+                            change_list_text(1);
                             delete1.setVisibility(View.GONE);
 
                         }
@@ -379,6 +413,9 @@ public class MainActivity extends AppCompatActivity {
                             list2.setTranslationX(0);
                             favor2.setTranslationX((float) 0.0);
 
+                            change_list_text(2);
+                            favor2.setVisibility(View.GONE);
+
                         }
 
                         //드래그 후 땔때 favor 화면의 반 미만일 때 다시 왼쪽으로 돌아감
@@ -410,6 +447,9 @@ public class MainActivity extends AppCompatActivity {
 
                             list2.setTranslationX(0);
                             delete2.setTranslationX((float) 0.0);
+
+                            change_list_text(2);
+                            delete2.setVisibility(View.GONE);
 
                         }
 
@@ -522,6 +562,9 @@ public class MainActivity extends AppCompatActivity {
                             list3.setTranslationX(0);
                             favor3.setTranslationX((float) 0.0);
 
+                            change_list_text(3);
+                            favor3.setVisibility(View.GONE);
+
                         }
 
                         //드래그 후 땔때 favor 화면의 반 미만일 때 다시 왼쪽으로 돌아감
@@ -553,6 +596,9 @@ public class MainActivity extends AppCompatActivity {
 
                             list3.setTranslationX(0);
                             delete3.setTranslationX((float) 0.0);
+
+                            change_list_text(3);
+                            delete3.setVisibility(View.GONE);
 
                         }
 
@@ -665,6 +711,9 @@ public class MainActivity extends AppCompatActivity {
                             list4.setTranslationX(0);
                             favor4.setTranslationX((float) 0.0);
 
+                            change_list_text(4);
+                            favor4.setVisibility(View.GONE);
+
                         }
 
                         //드래그 후 땔때 favor 화면의 반 미만일 때 다시 왼쪽으로 돌아감
@@ -696,6 +745,9 @@ public class MainActivity extends AppCompatActivity {
 
                             list4.setTranslationX(0);
                             delete4.setTranslationX((float) 0.0);
+
+                            change_list_text(4);
+                            delete4.setVisibility(View.GONE);
 
                         }
 
@@ -747,33 +799,69 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //num ( 리스트1,2,3,4 ) 지정해서 이미지, 노래, 가수 변경
-    public void change_list_text(int num, String img, String sing, String singer){
-        if (num == 1) {
-            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-            //img1.setImageDrawable(bitmap);
-            l1_music.setText(sing);
-            l1_singer.setText(singer);
+    public void change_list_text(int num){
+
+        int m_count = ++dataManager.m_count;
+        Music_Data music_data = dataManager.music_data.get(m_count);
+        switch (num)
+        {
+            case 1:
+                l1_music.setText(music_data.title);
+                l1_singer.setText(music_data.singer);
+                new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l1_index = m_count;
+                break;
+            case 2:
+                l2_music.setText(music_data.title);
+                l2_singer.setText(music_data.singer);
+                new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l2_index = m_count;
+                break;
+            case 3:
+                l3_music.setText(music_data.title);
+                l3_singer.setText(music_data.singer);
+                new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l3_index = m_count;
+                break;
+            case 4:
+                l4_music.setText(music_data.title);
+                l4_singer.setText(music_data.singer);
+                new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l4_index = m_count;
+                break;
         }
-        else if (num == 2) {
-            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-            //img2.setImageDrawable(bitmap);
-            l2_music.setText(sing);
-            l2_singer.setText(singer);
-        }
-        else if (num == 3) {
-            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-            //img2.setImageDrawable(bitmap);
-            l2_music.setText(sing);
-            l2_singer.setText(singer);
-        }
-        else if (num == 4) {
-            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-            //img2.setImageDrawable(bitmap);
-            l2_music.setText(sing);
-            l2_singer.setText(singer);
-        }
-        else
-            return;
+//        if (num == 1) {
+//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+//            //img1.setImageDrawable(bitmap);
+//
+////            l1_singer.setText(singer);
+//        }
+//        else if (num == 2) {
+//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+//            //img2.setImageDrawable(bitmap);
+//
+//
+////            l2_music.setText(sing);
+////            l2_singer.setText(singer);
+//        }
+//        else if (num == 3) {
+//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+//            //img2.setImageDrawable(bitmap);
+//
+//
+////            l2_music.setText(sing);
+////            l2_singer.setText(singer);
+//        }
+//        else if (num == 4) {
+//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+//            //img2.setImageDrawable(bitmap);
+//
+//
+////            l2_music.setText(sing);
+////            l2_singer.setText(singer);
+//        }
+//        else
+//            return;
     }
 
 }

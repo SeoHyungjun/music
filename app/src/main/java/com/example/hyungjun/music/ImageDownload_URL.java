@@ -5,7 +5,8 @@ package com.example.hyungjun.music;
  */
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,17 +27,13 @@ import java.util.Locale;
  * Created by MIN on 2018-05-03.
  */
 
-public class ImageDownload extends AsyncTask<String, Void, String> {
+public class ImageDownload_URL extends AsyncTask<String, Void, String> {
 
 
 //    private SharedPreferences userinfo;
 //    private String ID;
-    private String fileName;
-    String savePath = "";
-    String fileUrl ="";
-    String localPath = "";
     DataManager dataManager = DataManager.getInstance();
-
+    Bitmap bitmap;
 //    Context context;
 
 //    ImageDownload(Context context)
@@ -46,98 +43,70 @@ public class ImageDownload extends AsyncTask<String, Void, String> {
 ////        this.ID ="";
 //    }
 
-    public ImageDownload() {
+    public ImageDownload_URL() {
 
     }
 
+    // 리스트 번호, URL 받기
     @Override
     protected String doInBackground(String... params) {
 
         //다운로드 경로를 지정
 //        String savePath = Environment.getExternalStorageDirectory().toString() + SAVE_FOLDER;
 
-        File dir = new File(savePath);
-        //상위 디렉토리가 존재하지 않을 경우 생성
-        if (!dir.exists()) {
 
-            dir.mkdirs();
-
-        }
-        //파일 이름 :날짜_시간
-        Date day = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA);
-        fileName = params[2]; // 제목_가수
 //        fileName = String.valueOf(sdf.format(day));
+            Log.d("dddd",params[0]);
+            Log.d("dddd",params[1]);
 
-        switch (params[1]) {
-            case "local":
-                savePath= dataManager.getContext().getFilesDir().getAbsolutePath();
-                break;
-            case "cache":
-                savePath= dataManager.getContext().getCacheDir().getAbsolutePath();
-                break;
-        }
-        Log.d("img",savePath);
-
-        //웹 서버 쪽 파일이 있는 경로
-        fileUrl = params[0];;
-        Log.d("img file path",fileUrl);
-
-        // 로컬 경로
-        localPath = savePath + "/" + fileName + ".jpg";
-        Log.d("img local ",localPath);
-
-
-        //다운로드 폴더에 동일한 파일명이 존재하는지 확인
-        if (new File(savePath + "/" + fileName).exists()) {}
-
-        else {
-
+            String img_url = params[1];
             try {
-                URL imgUrl = new URL(fileUrl);
+                URL imgUrl = new URL(img_url);
                 //서버와 접속하는 클라이언트 객체 생성
                 HttpURLConnection conn = (HttpURLConnection) imgUrl.openConnection();
-                int len = conn.getContentLength();
-                byte[] tmpByte = new byte[len];
-                //입력 스트림을 구한다
-                InputStream is = conn.getInputStream();
-                File file = new File(localPath);
-                //파일 저장 스트림 생성
-                FileOutputStream fos = new FileOutputStream(file); //
-//            FileOutputStream fos = null;
-//            fos = context.openFileOutput(fileName+".jpg", Context.MODE_PRIVATE);
-                Log.d("fos", localPath);
-                int read;
+                conn.setDoInput(true); // 서버로 부터 응답 수신
+                conn.connect();
 
-                //입력 스트림을 파일로 저장
-                for (; ; ) {
-                    read = is.read(tmpByte);
-                    if (read <= 0) {
-                        break;
-                    }
-                    fos.write(tmpByte, 0, read); //file 생성
-                }
-                Log.d("fos", localPath + " download fin");
+                InputStream is = conn.getInputStream(); // InputStream 값 가져오기
+                bitmap = BitmapFactory.decodeStream(is); // Bitmap으로 변환
 
-                is.close();
-                fos.close();
+
                 conn.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        return "fin";
+        return params[0];
     }
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        View rootView = ((Activity)dataManager.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
-        ImageView v = rootView.findViewById(R.id.player);
+//        View rootView = ((Activity)dataManager.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
+        ImageView v;
+        Activity root = dataManager.getActivity();
+        switch (result)
+        {
+            case "1":
+                v = root.findViewById(R.id.img1);
+                v.setImageBitmap(bitmap);
+                break;
+            case "2":
+                v = root.findViewById(R.id.img2);
+                v.setImageBitmap(bitmap);
+                break;
+            case "3":
+                v = root.findViewById(R.id.img3);
+                v.setImageBitmap(bitmap);
+                break;
+            case "4":
+                v = root.findViewById(R.id.img4);
+                v.setImageBitmap(bitmap);
+                break;
+        }
 
-        Log.d("Localpath",localPath);
-        v.setImageURI(Uri.parse(localPath));
+//        Log.d("Localpath",localPath);
+//        v.setImageURI(Uri.parse(localPath));
 
         return;
 //        Bitmap img;

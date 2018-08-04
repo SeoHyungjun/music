@@ -1,13 +1,17 @@
-package org.androidtown.ituens_api_search_test;
+package com.example.hyungjun.music;
 
 /**
  * Created by MIN on 2018-06-09.
  */
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -25,6 +29,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static java.sql.DriverManager.println;
+
 /**
  * Created by syseng on 2017-10-30.
  */
@@ -34,6 +40,7 @@ import java.util.ArrayList;
 public class ServerConn extends AsyncTask<String, Void, String> {
     Context context;
     View view;
+    DataManager dataManager = DataManager.getInstance();
     //AlertDialog alertDialog;
 
 
@@ -50,11 +57,15 @@ public class ServerConn extends AsyncTask<String, Void, String> {
         this.view = view;
     }
 
+    public ServerConn() {
+
+    }
+
     @Override
     protected String doInBackground(String... params) {
         //params를 통해서 type과 그에 맞는 정보들을 받음
         //받은 항목중 인덱스 0번이 type이므로 type 변수에 저장
-        String type = params[0];
+//        String type = params[0];
 //        new Welfare_Data(params[1],params[2],params[3],params[4],params[5]);
 
 
@@ -92,18 +103,18 @@ public class ServerConn extends AsyncTask<String, Void, String> {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     result +=  line+"\n";
-                    if(line.contains("<img"))
-                    {
-
-                            String file_URL = "http://13.124.63.18/WELFARE/detail/"+ line.substring (line.indexOf("D"),line.indexOf("D")+7);
-//                        line.codePointAt(line.indexOf("D"));
-                         Log.d("index_i", Integer.toString(line.indexOf("D")));
-                         Log.d("index_it", file_URL);
-
-
-//                        line.
-//                        new ImageDownload(view).execute(file_URL,"cache",line.substring (line.indexOf("D"),line.indexOf("D")+7));
-                    }
+//                    if(line.contains("<img"))
+//                    {
+//
+//                            String file_URL = "http://13.124.63.18/WELFARE/detail/"+ line.substring (line.indexOf("D"),line.indexOf("D")+7);
+////                        line.codePointAt(line.indexOf("D"));
+//                         Log.d("index_i", Integer.toString(line.indexOf("D")));
+//                         Log.d("index_it", file_URL);
+//
+//
+////                        line.
+////                        new ImageDownload(view).execute(file_URL,"cache",line.substring (line.indexOf("D"),line.indexOf("D")+7));
+//                    }
                 }
                 bufferedReader.close();
                 inputStream.close();
@@ -111,8 +122,10 @@ public class ServerConn extends AsyncTask<String, Void, String> {
                 Log.d("server",result);
                 Gson gson = new Gson();
 
-                ArrayList<Music_Data> music_data = gson.fromJson(result, new TypeToken<ArrayList<Music_Data>>() {}.getType()); // 서버에서 받은 메시지(다른 클라이언트의 이름,위치 메시지 리스트 등)를 JSON->Gosn-> ArrayList<Message>로 해서 저장
-                Log.d("ddddd",music_data.get(0).title);
+//                ArrayList<Music_Data> music_data = gson.fromJson(result, new TypeToken<ArrayList<Music_Data>>() {}.getType()); // 서버에서 받은 메시지(다른 클라이언트의 이름,위치 메시지 리스트 등)를 JSON->Gosn-> ArrayList<Message>로 해서 저장
+                dataManager.music_data = gson.fromJson(result, new TypeToken<ArrayList<Music_Data>>() {}.getType()); // 서버에서 받은 메시지(다른 클라이언트의 이름,위치 메시지 리스트 등)를 JSON->Gosn-> ArrayList<Message>로 해서 저장
+
+//                Log.d("ddddd",dataManager.music_data.get(0).itunes_artwork_url);
 
 
                 return result;
@@ -249,17 +262,70 @@ public class ServerConn extends AsyncTask<String, Void, String> {
         //alertDialog.setMessage(result);
         //alertDialog.show();
         super.onPostExecute(result);
-        TextView v = view.findViewById(R.id.text2);
 
-        if(result==null)
-        {
-            v.setText("결과 없음");
+        ImageView img1, img2, img3, img4;
+        BitmapDrawable bitmap;
+        TextView l1_music, l2_music, l3_music, l4_music;
+        TextView l1_singer, l2_singer, l3_singer, l4_singer;
+        Resources res = dataManager.getActivity().getResources();
+        img1 = dataManager.getActivity().findViewById(R.id.img1);
+        img2 = dataManager.getActivity().findViewById(R.id.img2);
+        img3 = dataManager.getActivity().findViewById(R.id.img3);
+        img4 = dataManager.getActivity().findViewById(R.id.img4);
 
-        }
-        else {
 
-            v.setText(result);
-        }
+        l1_music = dataManager.getActivity().findViewById(R.id.list1_music);
+        l2_music = dataManager.getActivity().findViewById(R.id.list2_music);
+        l3_music = dataManager.getActivity().findViewById(R.id.list3_music);
+        l4_music = dataManager.getActivity().findViewById(R.id.list4_music);
+
+
+        l1_singer = dataManager.getActivity().findViewById(R.id.list1_singer);
+        l2_singer = dataManager.getActivity().findViewById(R.id.list2_singer);
+        l3_singer = dataManager.getActivity().findViewById(R.id.list3_singer);
+        l4_singer = dataManager.getActivity().findViewById(R.id.list4_singer);
+
+
+
+        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+        img1.setImageDrawable(bitmap);
+        l1_music.setText(dataManager.music_data.get(0).title);
+        l1_singer.setText(dataManager.music_data.get(0).singer);
+        new ImageDownload_URL().execute("1",dataManager.music_data.get(0).itunes_artwork_url);
+
+        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
+        img2.setImageDrawable(bitmap);
+        l2_music.setText(dataManager.music_data.get(1).title);
+        l2_singer.setText(dataManager.music_data.get(1).singer);
+        new ImageDownload_URL().execute("2",dataManager.music_data.get(1).itunes_artwork_url);
+
+
+        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
+        img3.setImageDrawable(bitmap);
+        l3_music.setText(dataManager.music_data.get(2).title);
+        l3_singer.setText(dataManager.music_data.get(2).singer);
+        new ImageDownload_URL().execute("3",dataManager.music_data.get(2).itunes_artwork_url);
+
+        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
+        img4.setImageDrawable(bitmap);
+        l4_music.setText(dataManager.music_data.get(3).title);
+        l4_singer.setText(dataManager.music_data.get(3).singer);
+        new ImageDownload_URL().execute("4",dataManager.music_data.get(3).itunes_artwork_url);
+
+        dataManager.m_count=3;
+
+//        println(dataManager.music_data.get(0).itunes_artwork_url);
+//        TextView v = view.findViewById(R.id.text2);
+//
+//        if(result==null)
+//        {
+//            v.setText("결과 없음");
+//
+//        }
+//        else {
+//
+//            v.setText(result);
+//        }
 
     }
 

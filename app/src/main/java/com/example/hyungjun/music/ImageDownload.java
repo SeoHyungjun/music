@@ -1,4 +1,4 @@
-package org.androidtown.ituens_api_search_test;
+package com.example.hyungjun.music;
 
 /**
  * Created by MIN on 2018-05-29.
@@ -6,9 +6,6 @@ package org.androidtown.ituens_api_search_test;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,9 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -40,14 +35,19 @@ public class ImageDownload extends AsyncTask<String, Void, String> {
     String savePath = "";
     String fileUrl ="";
     String localPath = "";
+    DataManager dataManager = DataManager.getInstance();
 
-    Context context;
+//    Context context;
 
-    ImageDownload(Context context)
-    {
-        this.context = context;
-//        userinfo =  context.getSharedPreferences("userinfo", Activity.MODE_PRIVATE);
-//        this.ID ="";
+//    ImageDownload(Context context)
+//    {
+//        this.context = context;
+////        userinfo =  context.getSharedPreferences("userinfo", Activity.MODE_PRIVATE);
+////        this.ID ="";
+//    }
+
+    public ImageDownload() {
+
     }
 
     @Override
@@ -71,10 +71,10 @@ public class ImageDownload extends AsyncTask<String, Void, String> {
 
         switch (params[1]) {
             case "local":
-                savePath= context.getFilesDir().getAbsolutePath();
+                savePath= dataManager.getContext().getFilesDir().getAbsolutePath();
                 break;
             case "cache":
-                savePath= context.getCacheDir().getAbsolutePath();
+                savePath= dataManager.getContext().getCacheDir().getAbsolutePath();
                 break;
         }
         Log.d("img",savePath);
@@ -133,8 +133,8 @@ public class ImageDownload extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        View rootView = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
-        ImageView v = rootView.findViewById(R.id.view2);
+        View rootView = ((Activity)dataManager.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
+        ImageView v = rootView.findViewById(R.id.player);
 
         Log.d("Localpath",localPath);
         v.setImageURI(Uri.parse(localPath));
