@@ -12,6 +12,7 @@ public class DataManager {
     private Context context;
     public ArrayList<Music_Data> music_data;
     public int m_count;
+    public String play_url;
 
 
     private DataManager(){

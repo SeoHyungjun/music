@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     ImageView img1, img2, img3, img4;
@@ -45,9 +48,11 @@ public class MainActivity extends AppCompatActivity {
     float screen_width;
     int anim_num = 0;
 
+    boolean click_lock= false;
+
     //SingleTon patton activity 저장
     private DataManager dataManager= DataManager.getInstance();
-
+    private Itunes_Search itunes_search;
 
 
 
@@ -58,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dataManager.setActivity(this);
+        itunes_search = new Itunes_Search();
+
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -101,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         delete4 = findViewById(R.id.delete4);
 
         favor1 = findViewById(R.id.favor1);
-        favor1.setZ(1);
         favor2 = findViewById(R.id.favor2);
         favor3 = findViewById(R.id.favor3);
         favor4 = findViewById(R.id.favor4);
@@ -111,28 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
         new ServerConn().execute();// list 받아오기
 
-//
-//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-//        img1.setImageDrawable(bitmap);
-//        l1_music.setText(dataManager.music_data.get(0).title);
-//        l1_singer.setText(dataManager.music_data.get(0).singer);
-//
-//
-//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
-//        img2.setImageDrawable(bitmap);
-//        l2_music.setText(dataManager.music_data.get(1).title);
-//        l2_singer.setText(dataManager.music_data.get(1).singer);
-//
-//
-//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
-//        img3.setImageDrawable(bitmap);
-//        l3_music.setText(dataManager.music_data.get(2).title);
-//        l3_singer.setText(dataManager.music_data.get(2).singer);
-//
-//        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
-//        img4.setImageDrawable(bitmap);
-//        l4_music.setText(dataManager.music_data.get(3).title);
-//        l4_singer.setText(dataManager.music_data.get(3).singer);
 //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
 //        img1.setImageDrawable(bitmap);
 //        l1_music.setText("What is Love?11111111");
@@ -153,17 +137,66 @@ public class MainActivity extends AppCompatActivity {
 //        l4_music.setText("사랑을 했다 (LOVE SCENARIO)");
 //        l4_singer.setText("iKON");
 
+        wrap_list1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!click_lock)
+                {
+                    new ImageDownload_URL().execute("0",dataManager.music_data.get(l1_index).itunes_artwork_url);
+                    itunes_search.mediaPlayer.release();
+//                    itunes_search.cancel(true);
+
+                    itunes_search = new Itunes_Search();
+                    itunes_search.execute(dataManager.music_data.get(l1_index).title,dataManager.music_data.get(l1_index).singer); ;
+                    println("hi click 1");
+                }
+            }
+        });
+        wrap_list2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!click_lock)
+                {
+                    new ImageDownload_URL().execute("0",dataManager.music_data.get(l2_index).itunes_artwork_url);
+                    println("hi click 2");
+                }
+            }
+        });
+        wrap_list3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!click_lock)
+                {
+                    new ImageDownload_URL().execute("0",dataManager.music_data.get(l3_index).itunes_artwork_url);
+                    println("hi click 3");
+                }
+            }
+        });
+        wrap_list4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!click_lock)
+                {
+                    new ImageDownload_URL().execute("0",dataManager.music_data.get(l4_index).itunes_artwork_url);
+                    println("hi click 4");
+                }
+            }
+        });
+
 
         wrap_list1.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int action = motionEvent.getAction();
+
                 if (action == MotionEvent.ACTION_DOWN) {
+                    click_lock =false;
                     down_x = motionEvent.getX();
                     init_x = down_x;
                 }
 
                 if (action == MotionEvent.ACTION_MOVE) {
+                    click_lock =false;
                     move_x = motionEvent.getX();
 
 
@@ -228,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
                     anim_num = 0;
 
                     if( list1.getX() > 0 && favor1.getX() > -screen_width ) {
+                        click_lock =true;
                         //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
                         if ( favor1.getX() >= -1 * screen_width / 2.0 ) {
                             //println("if");
@@ -286,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     else if( list1.getX() < 0 && delete1.getX() < screen_width ) {
+                        click_lock =true;
                         if ( delete1.getX() <= screen_width / 2.0) {
                             TranslateAnimation anim = new TranslateAnimation(delete1.getX(), 0, 0, 0);
                             anim.setDuration((int) delete1.getX());
@@ -321,13 +356,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                return true;
+                return false;
             }
         });
 
         wrap_list2.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                click_lock =false;
                 int action = motionEvent.getAction();
                 if (action == MotionEvent.ACTION_DOWN) {
                     down_x = motionEvent.getX();
@@ -399,6 +435,7 @@ public class MainActivity extends AppCompatActivity {
                     anim_num = 0;
 
                     if( list2.getX() > 0 && favor2.getX() > -screen_width ) {
+                        click_lock =true;
                         //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
                         if ( favor2.getX() >= -1 * screen_width / 2.0 ) {
                             //println("if");
@@ -436,6 +473,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     else if( list2.getX() < 0 && delete2.getX() < screen_width ) {
+                        click_lock =true;
                         if ( delete2.getX() <= screen_width / 2.0) {
                             TranslateAnimation anim = new TranslateAnimation(delete2.getX(), 0, 0, 0);
                             anim.setDuration((int) delete2.getX());
@@ -471,13 +509,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                return true;
+                return false;
             }
         });
 
         wrap_list3.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                click_lock =false;
                 int action = motionEvent.getAction();
                 if (action == MotionEvent.ACTION_DOWN) {
                     down_x = motionEvent.getX();
@@ -549,6 +588,7 @@ public class MainActivity extends AppCompatActivity {
                     anim_num = 0;
 
                     if( list3.getX() > 0 && favor3.getX() > -screen_width ) {
+                        click_lock =true;
                         //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
                         if ( favor3.getX() >= -1 * screen_width / 2.0 ) {
                             TranslateAnimation anim = new TranslateAnimation(favor3.getX(), 0, 0, 0);
@@ -585,6 +625,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     else if( list3.getX() < 0 && delete3.getX() < screen_width ) {
+                        click_lock =true;
                         if ( delete3.getX() <= screen_width / 2.0) {
                             TranslateAnimation anim = new TranslateAnimation(delete3.getX(), 0, 0, 0);
                             anim.setDuration((int) delete3.getX());
@@ -620,13 +661,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                return true;
+                return false;
             }
         });
 
         wrap_list4.setOnTouchListener(new LinearLayout.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                click_lock =false;
                 int action = motionEvent.getAction();
                 if (action == MotionEvent.ACTION_DOWN) {
                     down_x = motionEvent.getX();
@@ -698,6 +740,7 @@ public class MainActivity extends AppCompatActivity {
                     anim_num = 0;
 
                     if( list4.getX() > 0 && favor4.getX() > -screen_width ) {
+                        click_lock =true;
                         //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
                         if ( favor4.getX() >= -1 * screen_width / 2.0 ) {
                             TranslateAnimation anim = new TranslateAnimation(favor4.getX(), 0, 0, 0);
@@ -734,6 +777,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     else if( list4.getX() < 0 && delete4.getX() < screen_width ) {
+                        click_lock =true;
                         if ( delete4.getX() <= screen_width / 2.0) {
                             TranslateAnimation anim = new TranslateAnimation(delete4.getX(), 0, 0, 0);
                             anim.setDuration((int) delete4.getX());
@@ -769,7 +813,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                return true;
+                return false;
             }
         });
 
@@ -795,7 +839,7 @@ public class MainActivity extends AppCompatActivity {
 
     //토스트 띄우기용 (삭제예정)
     public void println(String data) {
-        Toast.makeText(this, data, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
     }
 
     //num ( 리스트1,2,3,4 ) 지정해서 이미지, 노래, 가수 변경

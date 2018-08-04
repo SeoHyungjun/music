@@ -22,27 +22,16 @@ import be.ceau.itunesapi.request.search.Media;
 import be.ceau.itunesapi.response.Response;
 import be.ceau.itunesapi.response.Result;
 
-public class Itunes_Search {
+public class Itunes_Search extends AsyncTask<String,String,String> {
     MediaPlayer mediaPlayer;
 //    TextView l1_music, l2_music, l3_music, l4_music;
 //    TextView l1_singer, l2_singer, l3_singer, l4_singer;
     DataManager dataManager = DataManager.getInstance();
 
-
     Itunes_Search()
     {
-//        l1_music = dataManager.getActivity().findViewById(R.id.list1_music);
-//        l2_music = dataManager.getActivity().findViewById(R.id.list2_music);
-//        l3_music = dataManager.getActivity().findViewById(R.id.list3_music);
-//        l4_music = dataManager.getActivity().findViewById(R.id.list4_music);
-//
-//
-//        l1_singer = dataManager.getActivity().findViewById(R.id.list1_singer);
-//        l2_singer = dataManager.getActivity().findViewById(R.id.list2_singer);
-//        l3_singer = dataManager.getActivity().findViewById(R.id.list3_singer);
-//        l4_singer = dataManager.getActivity().findViewById(R.id.list4_singer);
+        mediaPlayer = new MediaPlayer();
     }
-
 
     public void search()
     {
@@ -51,7 +40,6 @@ public class Itunes_Search {
 //        imm.hideSoftInputFromWindow(edit_artist.getWindowToken(), 0);
 //        textView.setText("searching....");
 //        imageView.setImageBitmap(null);
-        mediaPlayer.reset();
 //        a_search = new A_search();
 //        a_search.execute();
     }
@@ -73,10 +61,17 @@ public class Itunes_Search {
 //        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 //        imm.hideSoftInputFromWindow(edit_title.getWindowToken(), 0);
 //        imm.hideSoftInputFromWindow(edit_artist.getWindowToken(), 0);
+        mediaPlayer.pause();
+        mediaPlayer.stop();
+//        mediaPlayer.release();
+//        mediaPlayer = new MediaPlayer();
+//        mediaPlayer.stop();
+        mediaPlayer.reset();
         if(!musicURL.equals("")) {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 mediaPlayer.setDataSource(musicURL);
+//                mediaPlayer.prepareAsync();
                 mediaPlayer.prepare(); // might take long! (for buffering, etc)
             } catch (IOException e) {
                 e.printStackTrace();
@@ -87,20 +82,13 @@ public class Itunes_Search {
 
 //                    출처: http://unikys.tistory.com/350 [All-round programmer]
     }
-
-
-
-
-
-    public class A_search extends AsyncTask<String,String,List<String>>
-    {
         @Override
-        protected List<String> doInBackground(String... strings) {
+        protected String doInBackground(String... strings) {
             List<Result> results = null;
 
 
             try {
-                Response response = new Search(strings[1] +"+"+strings[2])
+                Response response = new Search(strings[0] +"+"+strings[1])
                         .setCountry(Country.UNITED_STATES)
 //                        .setCountry(Country.SOUTH_KOREA)
 //                        .setAttribute(Attribute.SONG_TERM)
@@ -117,8 +105,10 @@ public class Itunes_Search {
                 results = response.getResults();
                 if (results != null && results.size() > 0) {
                     for(Result result : results) {
+                        Log.d("prevURL",result.getPreviewUrl());
+//                        play(result.getPreviewUrl());
 //                        imageDownload.execute(result.getArtworkUrl100(), "cache", (result.getTrackName()+"_"+result.getArtistName()));
-                        new ImageDownload().execute(result.getArtworkUrl100(), "cache", (result.getTrackName()+"_"+result.getArtistName()));
+//                        new ImageDownload().execute(result.getArtworkUrl100(), "cache", (result.getTrackName()+"_"+result.getArtistName()));
 //                        while(img_result.equals("fin")){Log.d("while","~~~~~~~~~~~~~~~~~~");}
 
 //                        imageDownload.wait(1000);
@@ -132,13 +122,22 @@ public class Itunes_Search {
             {
                 Log.e("error",e.toString());
             }
-            return new ArrayList<String>(Arrays.asList(strings[0],strings[1],strings[2]));
+//            return new ArrayList<String>(Arrays.asList(strings[0],strings[1],strings[2]));
 
+            return results.get(0).getPreviewUrl();
         }
 
         @Override
-        protected void onPostExecute(List<String> music_data) {
-            super.onPostExecute(music_data);
+        protected void onPostExecute(final String preview_URL) {
+            super.onPostExecute(preview_URL);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    play(preview_URL);
+                }
+            }).start();
+
 //
 //            switch (music_data.get(0)) {
 //                case "1":
@@ -222,10 +221,11 @@ public class Itunes_Search {
         }
         protected void onCancelled()
         {
-
             super.onCancelled();
+            Log.d("async","stop!! async");
+
         }
-    }
+
     public void println(String data) {
         Toast.makeText(dataManager.getActivity(), data, Toast.LENGTH_LONG).show();
     }

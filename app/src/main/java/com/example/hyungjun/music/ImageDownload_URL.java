@@ -83,10 +83,18 @@ public class ImageDownload_URL extends AsyncTask<String, Void, String> {
         super.onPostExecute(result);
 
 //        View rootView = ((Activity)dataManager.getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
-        ImageView v;
+        ImageView v,v2;
         Activity root = dataManager.getActivity();
         switch (result)
         {
+            case "0":
+                v = root.findViewById(R.id.player);
+                v2 = root.findViewById(R.id.player2);
+//                bitmap= Bitmap.createScaledBitmap(bitmap ,v.getMaxWidth(),v.getMaxHeight(),true);
+//                Bitmap s_bitmap = Bitmap.createScaledBitmap(bitmap ,v.getMaxWidth(),v.getMaxHeight(),true)
+                v.setImageBitmap(Bitmap.createScaledBitmap(bitmap ,v.getWidth(),v.getHeight(),true));
+                v2.setImageBitmap(Bitmap.createScaledBitmap(bitmap , (int) (bitmap.getWidth()*(v2.getHeight()/bitmap.getHeight())*1.15),v2.getHeight(),true));
+                break;
             case "1":
                 v = root.findViewById(R.id.img1);
                 v.setImageBitmap(bitmap);
