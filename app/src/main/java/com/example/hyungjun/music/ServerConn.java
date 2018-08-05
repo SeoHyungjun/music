@@ -128,7 +128,7 @@ public class ServerConn extends AsyncTask<String, Void, String> {
 //                Log.d("ddddd",dataManager.music_data.get(0).itunes_artwork_url);
 
 
-                return result;
+                return params[0];
 
             } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -246,7 +246,7 @@ public class ServerConn extends AsyncTask<String, Void, String> {
 //                e.printStackTrace();
 //            }
 //        }
-        return null;
+        return params[0];
 
     }
 
@@ -262,57 +262,56 @@ public class ServerConn extends AsyncTask<String, Void, String> {
         //alertDialog.setMessage(result);
         //alertDialog.show();
         super.onPostExecute(result);
-
-        ImageView img1, img2, img3, img4;
-        BitmapDrawable bitmap;
-        TextView l1_music, l2_music, l3_music, l4_music;
-        TextView l1_singer, l2_singer, l3_singer, l4_singer;
-        Resources res = dataManager.getActivity().getResources();
-        img1 = dataManager.getActivity().findViewById(R.id.img1);
-        img2 = dataManager.getActivity().findViewById(R.id.img2);
-        img3 = dataManager.getActivity().findViewById(R.id.img3);
-        img4 = dataManager.getActivity().findViewById(R.id.img4);
-
-
-        l1_music = dataManager.getActivity().findViewById(R.id.list1_music);
-        l2_music = dataManager.getActivity().findViewById(R.id.list2_music);
-        l3_music = dataManager.getActivity().findViewById(R.id.list3_music);
-        l4_music = dataManager.getActivity().findViewById(R.id.list4_music);
+        if(result=="First") {
+            ImageView img1, img2, img3, img4;
+            BitmapDrawable bitmap;
+            TextView l1_music, l2_music, l3_music, l4_music;
+            TextView l1_singer, l2_singer, l3_singer, l4_singer;
+            Resources res = dataManager.getActivity().getResources();
+            img1 = dataManager.getActivity().findViewById(R.id.img1);
+            img2 = dataManager.getActivity().findViewById(R.id.img2);
+            img3 = dataManager.getActivity().findViewById(R.id.img3);
+            img4 = dataManager.getActivity().findViewById(R.id.img4);
 
 
-        l1_singer = dataManager.getActivity().findViewById(R.id.list1_singer);
-        l2_singer = dataManager.getActivity().findViewById(R.id.list2_singer);
-        l3_singer = dataManager.getActivity().findViewById(R.id.list3_singer);
-        l4_singer = dataManager.getActivity().findViewById(R.id.list4_singer);
+            l1_music = dataManager.getActivity().findViewById(R.id.list1_music);
+            l2_music = dataManager.getActivity().findViewById(R.id.list2_music);
+            l3_music = dataManager.getActivity().findViewById(R.id.list3_music);
+            l4_music = dataManager.getActivity().findViewById(R.id.list4_music);
 
 
-
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-        img1.setImageDrawable(bitmap);
-        l1_music.setText(dataManager.music_data.get(0).title);
-        l1_singer.setText(dataManager.music_data.get(0).singer);
-        new ImageDownload_URL().execute("1",dataManager.music_data.get(0).itunes_artwork_url);
-
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
-        img2.setImageDrawable(bitmap);
-        l2_music.setText(dataManager.music_data.get(1).title);
-        l2_singer.setText(dataManager.music_data.get(1).singer);
-        new ImageDownload_URL().execute("2",dataManager.music_data.get(1).itunes_artwork_url);
+            l1_singer = dataManager.getActivity().findViewById(R.id.list1_singer);
+            l2_singer = dataManager.getActivity().findViewById(R.id.list2_singer);
+            l3_singer = dataManager.getActivity().findViewById(R.id.list3_singer);
+            l4_singer = dataManager.getActivity().findViewById(R.id.list4_singer);
 
 
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
-        img3.setImageDrawable(bitmap);
-        l3_music.setText(dataManager.music_data.get(2).title);
-        l3_singer.setText(dataManager.music_data.get(2).singer);
-        new ImageDownload_URL().execute("3",dataManager.music_data.get(2).itunes_artwork_url);
+            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+            img1.setImageDrawable(bitmap);
+            l1_music.setText(dataManager.music_data.get(0).title);
+            l1_singer.setText(dataManager.music_data.get(0).singer);
+            new ImageDownload_URL().execute("1", dataManager.music_data.get(0).itunes_artwork_url);
 
-        bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
-        img4.setImageDrawable(bitmap);
-        l4_music.setText(dataManager.music_data.get(3).title);
-        l4_singer.setText(dataManager.music_data.get(3).singer);
-        new ImageDownload_URL().execute("4",dataManager.music_data.get(3).itunes_artwork_url);
+            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
+            img2.setImageDrawable(bitmap);
+            l2_music.setText(dataManager.music_data.get(1).title);
+            l2_singer.setText(dataManager.music_data.get(1).singer);
+            new ImageDownload_URL().execute("2", dataManager.music_data.get(1).itunes_artwork_url);
 
-        dataManager.m_count=3;
+
+            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
+            img3.setImageDrawable(bitmap);
+            l3_music.setText(dataManager.music_data.get(2).title);
+            l3_singer.setText(dataManager.music_data.get(2).singer);
+            new ImageDownload_URL().execute("3", dataManager.music_data.get(2).itunes_artwork_url);
+
+            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
+            img4.setImageDrawable(bitmap);
+            l4_music.setText(dataManager.music_data.get(3).title);
+            l4_singer.setText(dataManager.music_data.get(3).singer);
+            new ImageDownload_URL().execute("4", dataManager.music_data.get(3).itunes_artwork_url);
+
+            dataManager.m_count = 3;
 
 //        println(dataManager.music_data.get(0).itunes_artwork_url);
 //        TextView v = view.findViewById(R.id.text2);
@@ -326,7 +325,7 @@ public class ServerConn extends AsyncTask<String, Void, String> {
 //
 //            v.setText(result);
 //        }
-
+        }
     }
 
     @Override

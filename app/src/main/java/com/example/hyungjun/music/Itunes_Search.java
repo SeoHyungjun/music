@@ -31,6 +31,18 @@ public class Itunes_Search extends AsyncTask<String,String,String> {
     Itunes_Search()
     {
         mediaPlayer = new MediaPlayer();
+
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+            @Override
+            public void onPrepared(MediaPlayer player) {
+                player.start();
+//                itunes_search.mediaPlayer.start();
+                println("onPrepared");
+                dataManager.play_lock=false;
+            }
+
+        });
     }
 
     public void search()
@@ -71,8 +83,8 @@ public class Itunes_Search extends AsyncTask<String,String,String> {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 mediaPlayer.setDataSource(musicURL);
-//                mediaPlayer.prepareAsync();
-                mediaPlayer.prepare(); // might take long! (for buffering, etc)
+                mediaPlayer.prepareAsync();
+//                mediaPlayer.prepare(); // might take long! (for buffering, etc)
             } catch (IOException e) {
                 e.printStackTrace();
             }

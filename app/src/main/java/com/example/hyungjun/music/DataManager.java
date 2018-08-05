@@ -13,6 +13,7 @@ public class DataManager {
     public ArrayList<Music_Data> music_data;
     public int m_count;
     public String play_url;
+    boolean play_lock =true;
 
 
     private DataManager(){
