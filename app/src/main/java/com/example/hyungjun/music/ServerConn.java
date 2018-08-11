@@ -109,15 +109,15 @@ public class ServerConn extends AsyncTask<String, Void, String> {
                     bufferedWriter.flush();
                     bufferedWriter.close();
                     outputStream.close();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                    String result = "";
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        result +=  line+"\n";
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
+//                    InputStream inputStream = httpURLConnection.getInputStream();
+//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+//                    String result = "";
+//                    String line;
+//                    while ((line = bufferedReader.readLine()) != null) {
+//                        result +=  line+"\n";
+//                    }
+//                    bufferedReader.close();
+//                    inputStream.close();
                     httpURLConnection.disconnect();
 
                 }

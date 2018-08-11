@@ -109,7 +109,8 @@
                                 android:layout_gravity="center"
                                 android:adjustViewBounds="true"
                                 android:background="@drawable/cover"
-                                android:src="@drawable/i3" />
+                                />
+                            <!--android:src="@drawable/i3"-->
 
                         </LinearLayout>
 
@@ -204,7 +205,8 @@
                                 android:layout_gravity="center"
                                 android:adjustViewBounds="true"
                                 android:background="@drawable/cover"
-                                android:src="@drawable/i3" />
+                            />
+                            <!--android:src="@drawable/i3" -->
 
                         </LinearLayout>
 
