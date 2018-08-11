@@ -73,12 +73,12 @@ public class Itunes_Search extends AsyncTask<String,String,String> {
 //        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 //        imm.hideSoftInputFromWindow(edit_title.getWindowToken(), 0);
 //        imm.hideSoftInputFromWindow(edit_artist.getWindowToken(), 0);
-        mediaPlayer.pause();
-        mediaPlayer.stop();
+//        mediaPlayer.pause();
+//        mediaPlayer.stop();
 //        mediaPlayer.release();
 //        mediaPlayer = new MediaPlayer();
 //        mediaPlayer.stop();
-        mediaPlayer.reset();
+//        mediaPlayer.reset();
         if(!musicURL.equals("")) {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
