@@ -19,6 +19,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -68,67 +70,80 @@ public class ServerConn extends AsyncTask<String, Void, String> {
 //        String type = params[0];
 //        new Welfare_Data(params[1],params[2],params[3],params[4],params[5]);
 
+        String music_url = "http://littlecold2.iptime.org:3000/process/randommusic";
 
         //만약 로그인 시
 //            String login_url = "http://13.124.63.18/WELFARE/welfare_service.php";
-            String login_url = "http://littlecold2.iptime.org:3000/process/randommusic";
-
+            if(params[0].equals("get_music")) {
+                music_url = "http://littlecold2.iptime.org:3000/process/randommusic";
+            }
+            else if(params[0].equals("send_music")) {
+//                music_url = "http://littlecold2.iptime.org:3000/process/findmusic";
+                music_url = "http://littlecold2.iptime.org:3000/process/countmoodmusic";
+            }
+//        http://littlecold2.iptime.org:3000/public/countMoodMusic.html
 //            String login_url = "http://52.78.20.5/here/login_json.php";
             //서버에 있는 로그인 php와 통신하기 위해서 경로 지정
             try {
                 //로그인 시 id, pw만 입력값으로 필요하므로 각 값을 변수에 저장
-                URL url = new URL(login_url);
+                URL url = new URL(music_url);
 
                 //데이터 통신을 하기위한 연결
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                //url을 통해서 보낼 데이터를 id = 'id' & pw = 'pw' 식으로 만들어서 인코딩
-//                String post_data = URLEncoder.encode("user_id", "UTF-8") + "=" + URLEncoder.encode(user_id, "UTF-8") + "&" + URLEncoder.encode("user_pw", "UTF-8") + "=" + URLEncoder.encode(user_pw, "UTF-8");
-//                String a= Jsonize( Integer.parseInt(params[0]) ,Integer.parseInt(params[1]),params[2]);
-//                bufferedWriter.write(a);
-//                Log.d("json",Jsonize( Integer.parseInt(params[0]) ,Integer.parseInt(params[1]),params[2]));
-//                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                String result = "";
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    result +=  line+"\n";
-//                    if(line.contains("<img"))
-//                    {
-//
-//                            String file_URL = "http://13.124.63.18/WELFARE/detail/"+ line.substring (line.indexOf("D"),line.indexOf("D")+7);
-////                        line.codePointAt(line.indexOf("D"));
-//                         Log.d("index_i", Integer.toString(line.indexOf("D")));
-//                         Log.d("index_it", file_URL);
-//
-//
-////                        line.
-////                        new ImageDownload(view).execute(file_URL,"cache",line.substring (line.indexOf("D"),line.indexOf("D")+7));
-//                    }
+                BufferedWriter bufferedWriter1 = new BufferedWriter(new FileWriter(dataManager.getContext().getFilesDir().getAbsolutePath() +"output.txt"));
+                if(params[0].equals("send_music"))
+                {
+                    // user_id, music_id, mood
+                    String a= Jsonize( dataManager.ID ,Integer.parseInt(params[1]),dataManager.mood);
+                    bufferedWriter.write(a);
+                    Log.d("json",bufferedWriter.toString());
+                    Log.d("json",a);
+
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    String result = "";
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result +=  line+"\n";
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+
                 }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-                Log.d("server",result);
-                Gson gson = new Gson();
+                else if(params[0].equals("get_music"))
+                {
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    String result = "";
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result +=  line+"\n";
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    Log.d("server",result);
+                    Gson gson = new Gson();
 
-//                ArrayList<Music_Data> music_data = gson.fromJson(result, new TypeToken<ArrayList<Music_Data>>() {}.getType()); // 서버에서 받은 메시지(다른 클라이언트의 이름,위치 메시지 리스트 등)를 JSON->Gosn-> ArrayList<Message>로 해서 저장
-                dataManager.music_data = gson.fromJson(result, new TypeToken<ArrayList<Music_Data>>() {}.getType()); // 서버에서 받은 메시지(다른 클라이언트의 이름,위치 메시지 리스트 등)를 JSON->Gosn-> ArrayList<Message>로 해서 저장
+                    dataManager.music_data = gson.fromJson(result, new TypeToken<ArrayList<Music_Data>>() {}.getType()); // 서버에서 받은 메시지(다른 클라이언트의 이름,위치 메시지 리스트 등)를 JSON->Gosn-> ArrayList<Message>로 해서 저장
 
-//                Log.d("ddddd",dataManager.music_data.get(0).itunes_artwork_url);
+                    Log.d("ddddd", Integer.toString(dataManager.music_data.get(0).music_id));
 
-
-                return params[0];
+                }
 
             } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -136,117 +151,7 @@ public class ServerConn extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
 
-//                switch (type)
-//                {
-//
-//
-//            case "save_service":
-//
-//                break;
-//            case "find_service":
-//
-//
-//                break;
-//
-//                // save_service
-//
-//        }// switch
-
-
-
-
-//        //회원가입 시
-//        if (type.equals("signup")) {
-//            String signup_url = "http://13.124.63.18/here_is/signup_json.php";
-//            try {
-//                String id = params[1];
-//                String pw = params[2];
-//                String name = params[3];
-//                String info = params[4];
-//                String youtube = params[5];
-//                String index = params[6];
-//                URL url = new URL(signup_url);
-//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//                httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.setDoOutput(true);
-//                httpURLConnection.setDoInput(true);
-//                OutputStream outputStream = httpURLConnection.getOutputStream();
-//                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-//
-//                String post_data = URLEncoder.encode("id", "UTF-8") + "=" + URLEncoder.encode(id, "UTF-8") + "&"
-//                        + URLEncoder.encode("pw", "UTF-8") + "=" + URLEncoder.encode(pw, "UTF-8") + "&"
-//                        + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8") + "&"
-//                        + URLEncoder.encode("info", "UTF-8") + "=" + URLEncoder.encode(info, "UTF-8") + "&"
-//                        + URLEncoder.encode("youtube", "UTF-8") + "=" + URLEncoder.encode(youtube, "UTF-8") + "&"
-//                        + URLEncoder.encode("index", "UTF-8") + "=" + URLEncoder.encode(index, "UTF-8");
-//                bufferedWriter.write(post_data);
-//                bufferedWriter.flush();
-//                bufferedWriter.close();
-//                outputStream.close();
-//                InputStream inputStream = httpURLConnection.getInputStream();
-//                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-//                String result = "";
-//                String line;
-//                while ((line = bufferedReader.readLine()) != null) {
-//                    result += line;
-//                }
-//                bufferedReader.close();
-//                inputStream.close();
-//                httpURLConnection.disconnect();
-//                return result;
-//            } catch (MalformedURLException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        //회원정보 수정 시
-//        if (type.equals("edit_profile")) {
-//            String signup_url = "http://13.124.63.18/here_is/edit_profile_json.php";
-//            try {
-//                String id = params[1];
-//                String pw = params[2];
-//                String name = params[3];
-//                String info = params[4];
-//                String youtube = params[5];
-//                String index = params[6];
-//                URL url = new URL(signup_url);
-//                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//                httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.setDoOutput(true);
-//                httpURLConnection.setDoInput(true);
-//                OutputStream outputStream = httpURLConnection.getOutputStream();
-//                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-//
-//                String post_data = URLEncoder.encode("id", "UTF-8") + "=" + URLEncoder.encode(id, "UTF-8") + "&"
-//                        + URLEncoder.encode("pw", "UTF-8") + "=" + URLEncoder.encode(pw, "UTF-8") + "&"
-//                        + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8") + "&"
-//                        + URLEncoder.encode("info", "UTF-8") + "=" + URLEncoder.encode(info, "UTF-8") + "&"
-//                        + URLEncoder.encode("youtube", "UTF-8") + "=" + URLEncoder.encode(youtube, "UTF-8") + "&"
-//                        + URLEncoder.encode("index", "UTF-8") + "=" + URLEncoder.encode(index, "UTF-8");
-//                bufferedWriter.write(post_data);
-//                bufferedWriter.flush();
-//                bufferedWriter.close();
-//                outputStream.close();
-//                InputStream inputStream = httpURLConnection.getInputStream();
-//                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-//                String result = "";
-//                String line;
-//                while ((line = bufferedReader.readLine()) != null) {
-//                    result += line;
-//                }
-//                bufferedReader.close();
-//                inputStream.close();
-//                httpURLConnection.disconnect();
-//                return result;
-//            } catch (MalformedURLException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        return params[0];
+        return params[1];
 
     }
 
@@ -268,6 +173,16 @@ public class ServerConn extends AsyncTask<String, Void, String> {
             TextView l1_music, l2_music, l3_music, l4_music;
             TextView l1_singer, l2_singer, l3_singer, l4_singer;
             Resources res = dataManager.getActivity().getResources();
+
+
+            ((MainActivity)dataManager.getActivity()).l1_music_id = dataManager.music_data.get(0).music_id;
+            ((MainActivity)dataManager.getActivity()).l2_music_id = dataManager.music_data.get(1).music_id;
+            ((MainActivity)dataManager.getActivity()).l3_music_id = dataManager.music_data.get(2).music_id;
+            ((MainActivity)dataManager.getActivity()).l4_music_id = dataManager.music_data.get(3).music_id;
+
+
+
+
             img1 = dataManager.getActivity().findViewById(R.id.img1);
             img2 = dataManager.getActivity().findViewById(R.id.img2);
             img3 = dataManager.getActivity().findViewById(R.id.img3);
@@ -286,27 +201,27 @@ public class ServerConn extends AsyncTask<String, Void, String> {
             l4_singer = dataManager.getActivity().findViewById(R.id.list4_singer);
 
 
-            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-            img1.setImageDrawable(bitmap);
+//            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
+//            img1.setImageDrawable(bitmap);
             l1_music.setText(dataManager.music_data.get(0).title);
             l1_singer.setText(dataManager.music_data.get(0).singer);
             new ImageDownload_URL().execute("1", dataManager.music_data.get(0).itunes_artwork_url);
 
-            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
-            img2.setImageDrawable(bitmap);
+//            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
+//            img2.setImageDrawable(bitmap);
             l2_music.setText(dataManager.music_data.get(1).title);
             l2_singer.setText(dataManager.music_data.get(1).singer);
             new ImageDownload_URL().execute("2", dataManager.music_data.get(1).itunes_artwork_url);
 
 
-            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
-            img3.setImageDrawable(bitmap);
+//            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i3);
+//            img3.setImageDrawable(bitmap);
             l3_music.setText(dataManager.music_data.get(2).title);
             l3_singer.setText(dataManager.music_data.get(2).singer);
             new ImageDownload_URL().execute("3", dataManager.music_data.get(2).itunes_artwork_url);
 
-            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
-            img4.setImageDrawable(bitmap);
+//            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i4);
+//            img4.setImageDrawable(bitmap);
             l4_music.setText(dataManager.music_data.get(3).title);
             l4_singer.setText(dataManager.music_data.get(3).singer);
             new ImageDownload_URL().execute("4", dataManager.music_data.get(3).itunes_artwork_url);
@@ -333,12 +248,11 @@ public class ServerConn extends AsyncTask<String, Void, String> {
         super.onProgressUpdate(values);
     }
 
-    public String Jsonize(int pk, int data, String data2) // 데이터 받아서 JSON화 하는 함수 Data -> Gson -> json
+    public String Jsonize(String user_id ,int music_id, String  mood) // 데이터 받아서 JSON화 하는 함수 Data -> Gson -> json
     {
 
-//        String json = new Gson().toJson(new Music_Data( pk,data,data2)); //Data -> Gson -> json
-        return " ";
-//        return json;
+        String json = new Gson().toJson(new Music_Data(user_id ,music_id, mood)); //Data -> Gson -> json
+        return json;
 
     }
 

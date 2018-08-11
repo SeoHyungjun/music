@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView favor1, favor2, favor3, favor4;
 
 //    int favor1_lock = 0;
-//    int l1_index=0;
-//    int l2_index=1;
-//    int l3_index=2;
-//    int l4_index=3;
+    protected int l1_music_id;
+    protected int l2_music_id;
+    protected int l3_music_id;
+    protected int l4_music_id;
 
     //리스트 드래그 시 움직인 거리 * move_multi 만큼 이동하도록
     float move_multi = (float)2.0;
@@ -131,14 +131,14 @@ public class MainActivity extends AppCompatActivity {
 
         Resources res = getResources();
 
-        new ServerConn().execute("First");// list 받아오기
+        new ServerConn().execute("get_music","First");// list 받아오기
 
 
 
 
         bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
         img1.setImageDrawable(bitmap);
-        l1_music.setText("What is Love?11111111");
+        l1_music.setText("What is Love?");
         l1_singer.setText("TWICE (트와이스)");
 
         bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i2);
@@ -351,6 +351,9 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                             });
+                            new ServerConn().execute("send_music",Integer.toString(l1_music_id));
+
+
                             list1.startAnimation(anim2);
 
                             list1.setTranslationX(0);
@@ -506,6 +509,10 @@ public class MainActivity extends AppCompatActivity {
                             favor2.startAnimation(anim);
                             list2.startAnimation(anim2);
 
+
+                            new ServerConn().execute("send_music",Integer.toString(l2_music_id));
+
+
                             list2.setTranslationX(0);
                             favor2.setTranslationX((float) 0.0);
 
@@ -657,6 +664,8 @@ public class MainActivity extends AppCompatActivity {
 
                             favor3.startAnimation(anim);
                             list3.startAnimation(anim2);
+
+                            new ServerConn().execute("send_music",Integer.toString(l3_music_id));
 
                             list3.setTranslationX(0);
                             favor3.setTranslationX((float) 0.0);
@@ -810,6 +819,8 @@ public class MainActivity extends AppCompatActivity {
                             favor4.startAnimation(anim);
                             list4.startAnimation(anim2);
 
+                            new ServerConn().execute("send_music",Integer.toString(l4_music_id));
+
                             list4.setTranslationX(0);
                             favor4.setTranslationX((float) 0.0);
 
@@ -923,30 +934,37 @@ public class MainActivity extends AppCompatActivity {
                 l1_music.setText(music_data.title);
                 l1_singer.setText(music_data.singer);
                 new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l1_music_id=music_data.music_id;
 //                l1_index = m_count;
                 break;
             case 2:
                 l2_music.setText(music_data.title);
                 l2_singer.setText(music_data.singer);
                 new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l2_music_id=music_data.music_id;
+
 //                l2_index = m_count;
                 break;
             case 3:
                 l3_music.setText(music_data.title);
                 l3_singer.setText(music_data.singer);
                 new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l3_music_id=music_data.music_id;
+
 //                l3_index = m_count;
                 break;
             case 4:
                 l4_music.setText(music_data.title);
                 l4_singer.setText(music_data.singer);
                 new ImageDownload_URL().execute(Integer.toString(num),music_data.itunes_artwork_url);
+                l4_music_id=music_data.music_id;
+
 //                l4_index = m_count;
                 break;
         }
         if(m_count==dataManager.music_data.size()-1) {
             println("new LIST download");
-            new ServerConn().execute("more");
+            new ServerConn().execute("get_music","more");
             dataManager.m_count=0;
         }
 //        if (num == 1) {

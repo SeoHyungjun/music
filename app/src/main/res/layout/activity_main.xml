@@ -28,25 +28,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:background="#00333333"
+                android:background="#777777"
                 android:scaleType="fitXY"
-                android:src="@drawable/i1"
-                android:tint="#99000000">
+                android:tint="#99000000"
+                >
 
             </ImageView>
+            <!--android:src="@drawable/i1"-->
 
             <ImageView
                 android:id="@+id/player2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:background="#00333333"
                 android:scaleType="fitCenter"
-                android:src="@drawable/i1"
                 android:tint="#22000000">
 
             </ImageView>
+            <!--android:background="#00333333"-->
+
+            <!--android:src="@drawable/i1"-->
+
             <ImageButton
                 android:layout_width="200dp"
                 android:layout_height="200dp"

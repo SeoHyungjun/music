@@ -15,6 +15,9 @@ public class DataManager {
     public String play_url;
     boolean play_lock =true;
 
+    String ID;
+    String mood;
+
 
     private DataManager(){
 
