@@ -103,21 +103,23 @@ public class ServerConn extends AsyncTask<String, Void, String> {
                     // user_id, music_id, mood
                     String a= Jsonize( dataManager.ID ,Integer.parseInt(params[1]),dataManager.mood);
                     bufferedWriter.write(a);
-                    Log.d("json",bufferedWriter.toString());
+//                    Log.d("json",bufferedWriter.toString());
                     Log.d("json",a);
 
                     bufferedWriter.flush();
                     bufferedWriter.close();
                     outputStream.close();
-//                    InputStream inputStream = httpURLConnection.getInputStream();
-//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-//                    String result = "";
-//                    String line;
-//                    while ((line = bufferedReader.readLine()) != null) {
-//                        result +=  line+"\n";
-//                    }
-//                    bufferedReader.close();
-//                    inputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    String result = "";
+                    String line;
+                    Log.d("result_j_1","result: " +result);
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result +=  line+"\n";
+                    }
+                    Log.d("result_j_2","result: " +result);
+                    bufferedReader.close();
+                    inputStream.close();
                     httpURLConnection.disconnect();
 
                 }
