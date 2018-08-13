@@ -4,76 +4,165 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoodActivity"
-    android:weightSum="10"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context=".MoodActivity">
+
     <EditText
         android:id="@+id/edit_text_id"
-        android:hint="ID 적으라"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        />
+        android:layout_weight="0.1"
+        android:hint="ID 적으라" />
 
-    <GridLayout
-        android:layout_weight="9"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:columnCount="2"
-        android:rowCount="2">
+        android:layout_height="match_parent"
+        android:layout_weight="0.9"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        <Button
-            android:id="@+id/feel_happy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="fill"
-            android:layout_row="0"
-            android:layout_rowWeight="1"
-            android:onClick="feel_happy"
-            android:text="기쁘다 ^ㅇ^"
-            android:textSize="30dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            tools:ignore="NestedWeights">
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:layout_gravity="fill"
-            android:layout_row="0"
-            android:layout_rowWeight="1"
-            android:onClick="feel_sad"
-            android:text="슬프다 ㅠ-ㅠ"
-            android:textSize="30dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="fill"
-            android:layout_row="1"
-            android:layout_rowWeight="1"
-            android:onClick="feel_angry"
-            android:text="화난다 *ㅇ*"
-            android:textSize="30dp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="#87cefa"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="15dp">
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:layout_gravity="fill"
-            android:layout_row="1"
-            android:layout_rowWeight="1"
-            android:onClick="feel_mung"
-            android:text="멍때린다 ㅇ_ㅇ"
-            android:textSize="30dp" />
+                    <ImageView
+                        android:id="@+id/feel_happy"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="fill"
+                        android:layout_margin="40dp"
+                        android:gravity="center"
+                        android:onClick="feel_happy"
+                        android:src="@drawable/happy"
+                        android:scaleType="centerInside"/>
 
-    </GridLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="#a9a9a9"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="25dp">
+
+                    <ImageView
+                        android:id="@+id/button1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="fill"
+                        android:layout_margin="40dp"
+                        android:gravity="center"
+                        android:onClick="feel_sad"
+                        android:src="@drawable/sad"
+                        android:scaleType="centerInside"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            tools:ignore="NestedWeights">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="#ffa07a"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="15dp">
+
+                    <ImageView
+                        android:id="@+id/button2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="fill"
+                        android:layout_margin="40dp"
+                        android:gravity="center"
+                        android:onClick="feel_sad"
+                        android:src="@drawable/angry"
+                        android:scaleType="centerInside"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="#Abde43"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="25dp">
+
+                    <ImageView
+                        android:id="@+id/button3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="fill"
+                        android:layout_margin="40dp"
+                        android:gravity="center"
+                        android:onClick="feel_mung"
+                        android:src="@drawable/mung"
+                        android:scaleType="centerInside"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
