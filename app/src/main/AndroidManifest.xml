@@ -21,10 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fe9c98d0b72119cd29ee1365ca4d41364cd55c62" />
+
+        <activity android:name=".ScrollingActivity"></activity>
     </application>
 
 </manifest>

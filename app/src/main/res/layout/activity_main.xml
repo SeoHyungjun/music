@@ -458,11 +458,32 @@
 
 
         <LinearLayout
-            android:id="@+id/suffle_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.05"
-            android:orientation="vertical">
+            android:layout_weight="0.1"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            >
+
+            <Button
+                android:id="@+id/suffle_button"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:text="새로 고침"
+                android:onClick="suffle_button"
+                android:layout_marginLeft="150dp"
+                />
+
+            <Button
+                android:id="@+id/like_button"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:text="좋아요 리스트"
+                android:onClick="like_button"
+                android:layout_marginLeft="30dp"
+
+                />
+
 
         </LinearLayout>
 

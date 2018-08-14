@@ -81,6 +81,10 @@ public class ServerConn extends AsyncTask<String, Void, String> {
 //                music_url = "http://littlecold2.iptime.org:3000/process/findmusic";
                 music_url = "http://littlecold2.iptime.org:3000/process/countmoodmusic";
             }
+            else if(params[0].equals("get_like_list"))
+            {
+                music_url = "http://littlecold2.iptime.org:3000/process/goodlistuser";
+            }
 //        http://littlecold2.iptime.org:3000/public/countMoodMusic.html
 //            String login_url = "http://52.78.20.5/here/login_json.php";
             //서버에 있는 로그인 php와 통신하기 위해서 경로 지정
@@ -97,7 +101,6 @@ public class ServerConn extends AsyncTask<String, Void, String> {
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                BufferedWriter bufferedWriter1 = new BufferedWriter(new FileWriter(dataManager.getContext().getFilesDir().getAbsolutePath() +"output.txt"));
                 if(params[0].equals("send_music"))
                 {
                     // user_id, music_id, mood
@@ -146,6 +149,31 @@ public class ServerConn extends AsyncTask<String, Void, String> {
                     Log.d("ddddd", Integer.toString(dataManager.music_data.get(0).music_id));
 
                 }
+                else if(params[0].equals("get_like_list"))
+                {
+                    String a= Jsonize(dataManager.ID);
+                    bufferedWriter.write(a);
+
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    String result = "";
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result +=  line+"\n";
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    Log.d("server",result);
+                    Gson gson = new Gson();
+
+                    dataManager.like_list = gson.fromJson(result, new TypeToken<ArrayList<Music_Data>>() {}.getType()); // 서버에서 받은 메시지(다른 클라이언트의 이름,위치 메시지 리스트 등)를 JSON->Gosn-> ArrayList<Message>로 해서 저장
+
+//                    Log.d("ddddd", Integer.toString(dataManager.music_data.get(0).music_id));
+                }
 
             } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -153,7 +181,10 @@ public class ServerConn extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
 
-        return params[1];
+        if(params.length>1)
+            return params[1];
+        else
+            return "no";
 
     }
 
@@ -169,7 +200,7 @@ public class ServerConn extends AsyncTask<String, Void, String> {
         //alertDialog.setMessage(result);
         //alertDialog.show();
         super.onPostExecute(result);
-        if(result=="First") {
+        if(result.equals("First")) {
             ImageView img1, img2, img3, img4;
             BitmapDrawable bitmap;
             TextView l1_music, l2_music, l3_music, l4_music;
@@ -243,6 +274,13 @@ public class ServerConn extends AsyncTask<String, Void, String> {
 //            v.setText(result);
 //        }
         }
+        else if(result.equals("like_list"))
+        {
+            int cnt=1;
+            for(Music_Data like_data:dataManager.like_list) {
+                ((TextView) view).append(cnt++ +": " +like_data.title +" "+ like_data.singer+ " "+like_data.album+"\n");
+            }
+        }
     }
 
     @Override
@@ -254,6 +292,13 @@ public class ServerConn extends AsyncTask<String, Void, String> {
     {
 
         String json = new Gson().toJson(new Music_Data(user_id ,music_id, mood)); //Data -> Gson -> json
+        return json;
+
+    }
+    public String Jsonize(String user_id) // 데이터 받아서 JSON화 하는 함수 Data -> Gson -> json
+    {
+
+        String json = new Gson().toJson(new Music_Data(user_id)); //Data -> Gson -> json
         return json;
 
     }

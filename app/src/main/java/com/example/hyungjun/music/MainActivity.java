@@ -1,6 +1,7 @@
 package com.example.hyungjun.music;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -410,6 +411,7 @@ public class MainActivity extends AppCompatActivity {
 
                             delete1.startAnimation(anim);
                             list1.startAnimation(anim2);
+
 
                             list1.setTranslationX(0);
                             delete1.setTranslationX(0);
@@ -899,6 +901,18 @@ public class MainActivity extends AppCompatActivity {
             else
                 itunes_search.mediaPlayer.start();
         }
+    }
+
+    public void suffle_button(View view) {
+        change_list_text(1);
+        change_list_text(2);
+        change_list_text(3);
+        change_list_text(4);
+    }
+
+    public void like_button(View view) {
+        Intent intent = new Intent(getApplicationContext(), ScrollingActivity.class);
+        startActivity(intent);
     }
 
 

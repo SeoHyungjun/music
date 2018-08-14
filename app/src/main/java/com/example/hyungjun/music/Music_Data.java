@@ -37,6 +37,10 @@ public class Music_Data {
         this.music_id = music_id;
         this.mood = mood;
     }
+    Music_Data(String user_id )
+    {
+        this.user_id = user_id;
+    }
 
 
 }

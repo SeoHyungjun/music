@@ -11,6 +11,7 @@ public class DataManager {
     private Activity activity;
     private Context context;
     public ArrayList<Music_Data> music_data;
+    public ArrayList<Music_Data> like_list;
     public int m_count;
     public String play_url;
     boolean play_lock =true;
