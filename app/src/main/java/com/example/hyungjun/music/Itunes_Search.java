@@ -43,6 +43,7 @@ public class Itunes_Search extends AsyncTask<String,String,String> {
             }
 
         });
+
     }
 
     public void search()

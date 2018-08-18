@@ -463,15 +463,23 @@
             android:layout_weight="0.1"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
+            android:weightSum="3"
             >
-
+            <Button
+                android:id="@+id/auto_play_button"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:text="자동 재생"
+                android:onClick="auto_play_button"
+                android:layout_weight="1"
+                />
             <Button
                 android:id="@+id/suffle_button"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:text="새로 고침"
                 android:onClick="suffle_button"
-                android:layout_marginLeft="150dp"
+                android:layout_weight="1"
                 />
 
             <Button
@@ -480,7 +488,7 @@
                 android:layout_height="match_parent"
                 android:text="좋아요 리스트"
                 android:onClick="like_button"
-                android:layout_marginLeft="30dp"
+                android:layout_weight="1"
 
                 />
 

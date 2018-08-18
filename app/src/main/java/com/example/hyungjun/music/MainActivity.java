@@ -1,6 +1,8 @@
 package com.example.hyungjun.music;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -8,6 +10,7 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -53,13 +56,12 @@ public class MainActivity extends AppCompatActivity {
     int anim_num = 0;
 
     boolean click_lock= false;
-//    boolean play_lock = true;
-
+    int play_index =0;
     //SingleTon patton activity 저장
     private DataManager dataManager= DataManager.getInstance();
     private Itunes_Search itunes_search;
 
-
+    ProgressDialog dialog;
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
@@ -162,16 +164,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!click_lock)
                 {
-                    dataManager.play_lock=true;
-                    itunes_search.mediaPlayer.reset();
-                    itunes_search.mediaPlayer.release();
-                    itunes_search = new Itunes_Search();
-                    itunes_search.execute(l1_music.getText().toString(),l1_singer.getText().toString());
-//                    new ImageDownload_URL().execute("0","1");
-                    Bitmap temp = ((BitmapDrawable)img1.getDrawable()).getBitmap();
-                    player.setImageBitmap(Bitmap.createScaledBitmap(temp ,player.getWidth(),player.getHeight(),true));
-                    player2.setImageBitmap(Bitmap.createScaledBitmap(temp , (int) (temp.getWidth()*(player2.getHeight()/temp.getHeight())*1.15),player2.getHeight(),true));
-                    println("hi click 1");
+                    music_streaming(1);
+
                 }
             }
         });
@@ -180,19 +174,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!click_lock)
                 {
-                    dataManager.play_lock=true;
+                    music_streaming(2);
 
-                    itunes_search.mediaPlayer.reset();
-                    itunes_search.mediaPlayer.release();
-                    itunes_search = new Itunes_Search();
-//                    itunes_search.execute(dataManager.music_data.get(l2_index).title,dataManager.music_data.get(l2_index).singer);
-                    itunes_search.execute(l2_music.getText().toString(),l2_singer.getText().toString());
-
-//                    new ImageDownload_URL().execute("0",dataManager.music_data.get(l2_index).itunes_artwork_url);
-                    Bitmap temp = ((BitmapDrawable)img2.getDrawable()).getBitmap();
-                    player.setImageBitmap(Bitmap.createScaledBitmap(temp ,player.getWidth(),player.getHeight(),true));
-                    player2.setImageBitmap(Bitmap.createScaledBitmap(temp , (int) (temp.getWidth()*(player2.getHeight()/temp.getHeight())*1.15),player2.getHeight(),true));
-                    println("hi click 2");
 
 
                 }
@@ -203,20 +186,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!click_lock)
                 {
-                    dataManager.play_lock=true;
+                    music_streaming(3);
 
-
-                    itunes_search.mediaPlayer.reset();
-                    itunes_search.mediaPlayer.release();
-                    itunes_search = new Itunes_Search();
-//                    itunes_search.execute(dataManager.music_data.get(l3_index).title,dataManager.music_data.get(l3_index).singer);
-                    itunes_search.execute(l3_music.getText().toString(),l3_singer.getText().toString());
-
-//                    new ImageDownload_URL().execute("0",dataManager.music_data.get(l3_index).itunes_artwork_url);
-                    Bitmap temp = ((BitmapDrawable)img3.getDrawable()).getBitmap();
-                    player.setImageBitmap(Bitmap.createScaledBitmap(temp ,player.getWidth(),player.getHeight(),true));
-                    player2.setImageBitmap(Bitmap.createScaledBitmap(temp , (int) (temp.getWidth()*(player2.getHeight()/temp.getHeight())*1.15),player2.getHeight(),true));
-                    println("hi click 3");
                 }
             }
         });
@@ -225,20 +196,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!click_lock)
                 {
-                    dataManager.play_lock=true;
-
-
-                    itunes_search.mediaPlayer.reset();
-                    itunes_search.mediaPlayer.release();
-                    itunes_search = new Itunes_Search();
-//                    itunes_search.execute(dataManager.music_data.get(l4_index).title,dataManager.music_data.get(l4_index).singer);
-                    itunes_search.execute(l4_music.getText().toString(),l4_singer.getText().toString());
-
-                    Bitmap temp = ((BitmapDrawable)img4.getDrawable()).getBitmap();
-                    player.setImageBitmap(Bitmap.createScaledBitmap(temp ,player.getWidth(),player.getHeight(),true));
-                    player2.setImageBitmap(Bitmap.createScaledBitmap(temp , (int) (temp.getWidth()*(player2.getHeight()/temp.getHeight())*1.15),player2.getHeight(),true));
-//                    new ImageDownload_URL().execute("0",dataManager.music_data.get(l4_index).itunes_artwork_url);
-                    println("hi click 4");
+                    music_streaming(4);
                 }
             }
         });
@@ -889,8 +847,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
 
     public void play_button(View view) {
@@ -904,17 +860,111 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void suffle_button(View view) {
-        change_list_text(1);
-        change_list_text(2);
-        change_list_text(3);
-        change_list_text(4);
+        if(play_index!=1)
+            change_list_text(1);
+        if(play_index!=2)
+            change_list_text(2);
+        if(play_index!=3)
+            change_list_text(3);
+        if(play_index!=4)
+            change_list_text(4);
     }
 
     public void like_button(View view) {
         Intent intent = new Intent(getApplicationContext(), ScrollingActivity.class);
         startActivity(intent);
     }
+    public void auto_play_button(View view)
+    {
 
+        dialog = ProgressDialog.show(MainActivity.this, "",
+                "자동 재생 중...", true,true, new DialogInterface.OnCancelListener(){
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+//                        finish();
+                    }
+
+        });
+
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            music_streaming(play_index + 1);
+//                        }
+//                    });
+//
+//
+//                    while (!itunes_search.mediaPlayer.isPlaying()) {
+//
+//                    }
+//                    while (itunes_search.mediaPlayer.isPlaying()) {
+//
+//                    }
+//
+////                dialog.cancel();
+//
+//
+//                }
+//            }).start();
+
+    }
+    public void music_streaming(int index)
+    {
+        dataManager.play_lock=true;
+        itunes_search.mediaPlayer.reset();
+        itunes_search.mediaPlayer.release();
+        itunes_search = new Itunes_Search();
+        Bitmap temp =((BitmapDrawable)img1.getDrawable()).getBitmap();
+
+        list1.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border));
+        list2.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border));
+        list3.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border));
+        list4.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border));
+
+        switch (index)
+        {
+            case 1:
+                itunes_search.execute(l1_music.getText().toString(),l1_singer.getText().toString());
+//                    new ImageDownload_URL().execute("0","1");
+                temp = ((BitmapDrawable)img1.getDrawable()).getBitmap();
+                list1.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border_play));
+                play_index=1;
+                break;
+            case 2:
+                itunes_search.execute(l2_music.getText().toString(),l2_singer.getText().toString());
+//                    new ImageDownload_URL().execute("0","1");
+                temp = ((BitmapDrawable)img2.getDrawable()).getBitmap();
+                list2.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border_play));
+                play_index=2;
+                break;
+            case 3:
+                itunes_search.execute(l3_music.getText().toString(),l3_singer.getText().toString());
+//                    new ImageDownload_URL().execute("0","1");
+                temp = ((BitmapDrawable)img3.getDrawable()).getBitmap();
+                list3.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border_play));
+                play_index=3;
+                break;
+            case 4:
+                itunes_search.execute(l4_music.getText().toString(),l4_singer.getText().toString());
+//                    new ImageDownload_URL().execute("0","1");
+                temp = ((BitmapDrawable)img4.getDrawable()).getBitmap();
+                list4.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.list_border_play));
+                play_index=4;
+                break;
+
+        }
+        player.setImageBitmap(Bitmap.createScaledBitmap(temp ,player.getWidth(),player.getHeight(),true));
+        player2.setImageBitmap(Bitmap.createScaledBitmap(temp , (int) (temp.getWidth()*(player2.getHeight()/temp.getHeight())*1.15),player2.getHeight(),true));
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     private class SlidingPageAnimationListener implements Animation.AnimationListener {
         /**
@@ -981,38 +1031,7 @@ public class MainActivity extends AppCompatActivity {
             new ServerConn().execute("get_music","more");
             dataManager.m_count=0;
         }
-//        if (num == 1) {
-//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-//            //img1.setImageDrawable(bitmap);
-//
-////            l1_singer.setText(singer);
-//        }
-//        else if (num == 2) {
-//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-//            //img2.setImageDrawable(bitmap);
-//
-//
-////            l2_music.setText(sing);
-////            l2_singer.setText(singer);
-//        }
-//        else if (num == 3) {
-//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-//            //img2.setImageDrawable(bitmap);
-//
-//
-////            l2_music.setText(sing);
-////            l2_singer.setText(singer);
-//        }
-//        else if (num == 4) {
-//            //bitmap = (BitmapDrawable) res.getDrawable(R.drawable.i1);
-//            //img2.setImageDrawable(bitmap);
-//
-//
-////            l2_music.setText(sing);
-////            l2_singer.setText(singer);
-//        }
-//        else
-//            return;
+
     }
 
 }
