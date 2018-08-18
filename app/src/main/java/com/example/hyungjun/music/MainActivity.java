@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView delete1, delete2, delete3, delete4;
     ImageView favor1, favor2, favor3, favor4;
 
+    ImageView likebutton;
+    float like_x, like_y;
+
 //    int favor1_lock = 0;
     protected int l1_music_id;
     protected int l2_music_id;
@@ -87,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         screen_width = size.x;
+
+        likebutton = findViewById(R.id.like_button);
+
+        like_x = likebutton.getX();
+        like_y = likebutton.getY();
 
         player = findViewById(R.id.player);
         player2 = findViewById(R.id.player2);
@@ -238,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
                         //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
                         else {
-                            delete1.setTranslationX(0);
+                            delete1.setTranslationX(screen_width);
                             delete1.setVisibility(View.GONE);
                             list1.setTranslationX(0);
                         }
@@ -261,14 +269,14 @@ public class MainActivity extends AppCompatActivity {
                         //화면 범위보다 적으므로 왼쪽으로 더 못가게 고정
                         else if ( (down_x - move_x) * -move_multi < 0 ) {
                             favor1.setVisibility(View.GONE);
-                            favor1.setTranslationX(0);
+                            favor1.setTranslationX(-screen_width);
                             list1.setTranslationX(0);
                         }
 
                         //화면 범위보다 크므로 오른쪽으로 더 못가게 고정
                         else {
                             favor1.setTranslationX(0);
-                            list1.setTranslationX(0);
+                            list1.setTranslationX(screen_width);
                         }
                         init_x = move_x;
 
@@ -281,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                     if( list1.getX() > 0 && favor1.getX() > -screen_width ) {
                         click_lock =true;
                         //드래그 후 땔때 favor가 화면의 반 이상 찼을 때 오른쪽으로 채워지고 추가
-                        if ( favor1.getX() >= -1 * screen_width / 2.0 ) {
+                        if ( favor1.getX() >= -1 * screen_width / 2.0) {
                             //println("if");
                             TranslateAnimation anim = new TranslateAnimation(favor1.getX(), 0, 0, 0);
                             anim.setDuration((int)favor1.getX() * -1 );
