@@ -1,5 +1,6 @@
 package com.example.hyungjun.music;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -27,21 +28,42 @@ public class Itunes_Search extends AsyncTask<String,String,String> {
 //    TextView l1_music, l2_music, l3_music, l4_music;
 //    TextView l1_singer, l2_singer, l3_singer, l4_singer;
     DataManager dataManager = DataManager.getInstance();
+    ProgressDialog asyncDialog;
 
     Itunes_Search()
     {
+
         mediaPlayer = new MediaPlayer();
 
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
             @Override
             public void onPrepared(MediaPlayer player) {
+                asyncDialog.dismiss();
                 player.start();
 //                itunes_search.mediaPlayer.start();
                 println("onPrepared");
                 dataManager.play_lock=false;
             }
 
+        });
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                Log.d("key","play_lock: " +dataManager.play_lock+", auto_play: "+ dataManager.auto_play);
+                if(!dataManager.play_lock&& dataManager.auto_play) {
+                    if(dataManager.play_index==4) {
+                        ((MainActivity) dataManager.getActivity()).change_list(1);
+                        ((MainActivity) dataManager.getActivity()).change_list(2);
+                        ((MainActivity) dataManager.getActivity()).change_list(3);
+                        ((MainActivity) dataManager.getActivity()).change_list(4);
+                        dataManager.play_index = 0;
+                    }
+                    ((MainActivity) dataManager.getActivity()).music_streaming(dataManager.play_index + 1);
+
+                }
+
+            }
         });
 
     }
@@ -66,7 +88,25 @@ public class Itunes_Search extends AsyncTask<String,String,String> {
 //        출처: http://itpangpang.xyz/304 [ITPangPang]
 
     }
+    protected void onPreExecute() {
 
+        asyncDialog = new ProgressDialog(
+
+                dataManager.getActivity());
+
+        asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        asyncDialog.setMessage("로딩 중..");
+
+
+
+        // show dialog
+
+        asyncDialog.show();
+
+        super.onPreExecute();
+
+    }
     public void play(String musicURL)
     {
 //        new ServerConn(textView).execute(editText.getText().toString(),"2","데리러가");
@@ -128,6 +168,7 @@ public class Itunes_Search extends AsyncTask<String,String,String> {
 
                     }
                 } else {
+
                 }
 
 

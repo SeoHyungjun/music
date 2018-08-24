@@ -8,25 +8,20 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     ImageView img1, img2, img3, img4;
@@ -327,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                             favor1.setTranslationX((float) 0.0);
 
 
-                            change_list_text(1);
+                            change_list(1);
                             favor1.setVisibility(View.GONE);
                         }
 
@@ -362,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
                             list1.setTranslationX(0);
                             delete1.setTranslationX((float) 0.0);
 
-                            change_list_text(1);
+                            change_list(1);
                             delete1.setVisibility(View.GONE);
 
                         }
@@ -484,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
                             list2.setTranslationX(0);
                             favor2.setTranslationX((float) 0.0);
 
-                            change_list_text(2);
+                            change_list(2);
                             favor2.setVisibility(View.GONE);
 
                         }
@@ -520,7 +515,7 @@ public class MainActivity extends AppCompatActivity {
                             list2.setTranslationX(0);
                             delete2.setTranslationX((float) 0.0);
 
-                            change_list_text(2);
+                            change_list(2);
                             delete2.setVisibility(View.GONE);
 
                         }
@@ -638,7 +633,7 @@ public class MainActivity extends AppCompatActivity {
                             list3.setTranslationX(0);
                             favor3.setTranslationX((float) 0.0);
 
-                            change_list_text(3);
+                            change_list(3);
                             favor3.setVisibility(View.GONE);
 
                         }
@@ -674,7 +669,7 @@ public class MainActivity extends AppCompatActivity {
                             list3.setTranslationX(0);
                             delete3.setTranslationX((float) 0.0);
 
-                            change_list_text(3);
+                            change_list(3);
                             delete3.setVisibility(View.GONE);
 
                         }
@@ -792,7 +787,7 @@ public class MainActivity extends AppCompatActivity {
                             list4.setTranslationX(0);
                             favor4.setTranslationX((float) 0.0);
 
-                            change_list_text(4);
+                            change_list(4);
                             favor4.setVisibility(View.GONE);
 
                         }
@@ -828,7 +823,7 @@ public class MainActivity extends AppCompatActivity {
                             list4.setTranslationX(0);
                             delete4.setTranslationX((float) 0.0);
 
-                            change_list_text(4);
+                            change_list(4);
                             delete4.setVisibility(View.GONE);
 
                         }
@@ -869,13 +864,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void suffle_button(View view) {
         if(play_index!=1)
-            change_list_text(1);
+            change_list(1);
         if(play_index!=2)
-            change_list_text(2);
+            change_list(2);
         if(play_index!=3)
-            change_list_text(3);
+            change_list(3);
         if(play_index!=4)
-            change_list_text(4);
+            change_list(4);
     }
 
     public void like_button(View view) {
@@ -885,22 +880,26 @@ public class MainActivity extends AppCompatActivity {
     public void auto_play_button(View view)
     {
 
-        dialog = ProgressDialog.show(MainActivity.this, "",
-                "자동 재생 중...", true,true, new DialogInterface.OnCancelListener(){
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-//                        finish();
-                    }
-
-        });
-
+        new DialogTask().execute();
 //            new Thread(new Runnable() {
+//                ProgressDialog dialog;
 //                @Override
 //                public void run() {
 //                    runOnUiThread(new Runnable() {
 //                        @Override
 //                        public void run() {
 //                            music_streaming(play_index + 1);
+//
+//                            dialog = ProgressDialog.show(MainActivity.this, "",
+//                                    "자동 재생 중...", true,true, new DialogInterface.OnCancelListener(){
+//
+//                                        @Override
+//                                        public void onCancel(DialogInterface dialog) {
+////                        finish();
+//                                        }
+//
+//                                    });
+//
 //                        }
 //                    });
 //
@@ -919,6 +918,8 @@ public class MainActivity extends AppCompatActivity {
 //            }).start();
 
     }
+
+
     public void music_streaming(int index)
     {
         dataManager.play_lock=true;
@@ -966,6 +967,7 @@ public class MainActivity extends AppCompatActivity {
         }
         player.setImageBitmap(Bitmap.createScaledBitmap(temp ,player.getWidth(),player.getHeight(),true));
         player2.setImageBitmap(Bitmap.createScaledBitmap(temp , (int) (temp.getWidth()*(player2.getHeight()/temp.getHeight())*1.15),player2.getHeight(),true));
+        dataManager.play_index=play_index;
 
     }
 
@@ -995,7 +997,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //num ( 리스트1,2,3,4 ) 지정해서 이미지, 노래, 가수 변경
-    public void change_list_text(int num){
+    public void change_list(int num){
 
         int m_count = ++dataManager.m_count;
         Music_Data music_data = dataManager.music_data.get(m_count);
@@ -1041,5 +1043,96 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    private class DialogTask extends AsyncTask<Void, Void, Void> {
+
+
+
+        ProgressDialog asyncDialog = new ProgressDialog(
+
+                MainActivity.this);
+
+
+
+        @Override
+
+        protected void onPreExecute() {
+
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+            asyncDialog.setMessage("자동 재생 중..");
+
+
+//                            dialog = ProgressDialog.show(MainActivity.this, "",
+//                                    "자동 재생 중...", true,true, new DialogInterface.OnCancelListener(){
+//
+//                                        @Override
+//                                        public void onCancel(DialogInterface dialog) {
+////                        finish();
+//                                        }
+//
+//                                    });
+//
+//                        }
+            // show dialog
+            asyncDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    dataManager.auto_play=false;
+                    itunes_search.mediaPlayer.stop();
+                }
+            });
+            asyncDialog.show();
+
+            super.onPreExecute();
+
+        }
+
+
+
+        @Override
+
+        protected Void doInBackground(Void... arg0) {
+
+//            try {
+//
+//                for (int i = 0; i < 5; i++) {
+//
+//                    //asyncDialog.setProgress(i * 30);
+//
+//                    Thread.sleep(500);
+//
+//                }
+//
+//            } catch (InterruptedException e) {
+//
+//                e.printStackTrace();
+//
+//            }
+
+            return null;
+
+        }
+
+
+
+        @Override
+
+        protected void onPostExecute(Void result) {
+
+//            asyncDialog.dismiss();
+            dataManager.auto_play=true;
+            music_streaming(dataManager.play_index);
+
+            super.onPostExecute(result);
+
+        }
+
+
+        //    출처: http://mainia.tistory.com/2031 [녹두장군 - 상상을 현실로]
+
+    }// dialog
+
 
 }
+
+
